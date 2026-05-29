@@ -1,0 +1,375 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-12 17:49+0600\n"
+"PO-Revision-Date: 2023-02-05 16:03+0000\n"
+"Last-Translator: b'  <>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.9.3\n"
+
+#: .\account\forms.py:13
+msgid "Password"
+msgstr ""
+
+#: .\account\forms.py:15
+msgid "Repeat password"
+msgstr ""
+
+#: .\templates\account\registration\login.html:10
+msgid "Log-in"
+msgstr ""
+
+#: .\templates\account\registration\login.html:13
+msgid "Your username and password didn't match.Please try again."
+msgstr ""
+
+#: .\templates\account\registration\login.html:16
+msgid "Please, use the following form to log-in:"
+msgstr ""
+
+#: .\templates\account\registration\login.html:29
+msgid "Login"
+msgstr ""
+
+#: .\templates\account\registration\login.html:32
+msgid "Don't have  account?"
+msgstr ""
+
+#: .\templates\account\registration\login.html:32
+msgid "Sign up"
+msgstr ""
+
+#: .\templates\account\registration\register.html:7
+msgid "Жүйеге тіркелу"
+msgstr ""
+
+#: .\templates\account\registration\register.html:8
+msgid "CPlease, sign up using the following form:"
+msgstr ""
+
+#: .\templates\account\registration\register.html:12
+msgid "Create my account"
+msgstr ""
+
+#: .\templates\base.html:43 .\templates\main\index.html:55
+msgid "Volunteer projects"
+msgstr ""
+
+#: .\templates\base.html:100 .\templates\base.html:126
+#: .\templates\base.html:145
+msgid "My Profille"
+msgstr ""
+
+#: .\templates\base.html:101 .\templates\base.html:146
+#: .\templates\main\notification.html:12
+msgid "Notification"
+msgstr ""
+
+#: .\templates\base.html:103 .\templates\base.html:148
+msgid "Logout"
+msgstr ""
+
+#: .\templates\base.html:112 .\templates\base.html:131
+#: .\templates\base.html:157 .\templates\base.html:178
+#: .\templates\volunteers\project_detail.html:82
+msgid "Login / Sign Up"
+msgstr ""
+
+#: .\templates\base.html:127
+msgid "My Projects"
+msgstr ""
+
+#: .\templates\base.html:171 .\templates\volunteers\project_detail.html:16
+msgid "Home"
+msgstr ""
+
+#: .\templates\base.html:172 .\templates\main\index.html:187
+#: .\templates\organization\index.html:9
+msgid "Projects"
+msgstr ""
+
+#: .\templates\base.html:173 .\templates\main\index.html:181
+msgid "News"
+msgstr ""
+
+#: .\templates\base.html:206
+msgid "Welcome to Unified Platform of Volunteers"
+msgstr "sadsadas"
+
+#: .\templates\base.html:211
+msgid "Get in Touch with Us"
+msgstr ""
+
+#: .\templates\base.html:242
+msgid "Login Your Account"
+msgstr ""
+
+#: .\templates\main\index.html:56
+msgid "Stay up to date with all important events in your area"
+msgstr ""
+
+#: .\templates\main\index.html:67
+msgid "Library"
+msgstr ""
+
+#: .\templates\main\index.html:68
+msgid ""
+"In our library you will find useful information for volunteers and "
+"organizations"
+msgstr ""
+
+#: .\templates\main\index.html:79 .\templates\main\index.html:265
+msgid "Support"
+msgstr ""
+
+#: .\templates\main\index.html:80
+msgid ""
+"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod "
+"tempor incididunt ut labore"
+msgstr ""
+
+#: .\templates\main\index.html:93
+msgid "Recent Projects"
+msgstr ""
+
+#: .\templates\main\index.html:102
+msgid "Category "
+msgstr ""
+
+#: .\templates\main\index.html:107
+msgid "All"
+msgstr ""
+
+#: .\templates\main\index.html:160 .\templates\main\project_list.html:60
+msgid "There are no listings in the category you selected"
+msgstr ""
+
+#: .\templates\main\index.html:193 .\templates\organization\profille.html:49
+#: .\templates\organization\projects_detail.html:76
+msgid "Volunteer"
+msgstr ""
+
+#: .\templates\main\index.html:206
+msgid "Akcel News"
+msgstr ""
+
+#: .\templates\main\index.html:215 .\templates\main\news_list.html:29
+msgid "Read More"
+msgstr ""
+
+#: .\templates\main\index.html:245
+msgid "Write technical support"
+msgstr ""
+
+#: .\templates\main\index.html:252
+msgid "Subject"
+msgstr ""
+
+#: .\templates\main\index.html:257
+msgid "Close"
+msgstr ""
+
+#: .\templates\main\index.html:258
+msgid "Send"
+msgstr ""
+
+#: .\templates\main\news_list.html:11
+msgid "List of news"
+msgstr ""
+
+#: .\templates\main\notification.html:22
+msgid "Message list"
+msgstr ""
+
+#: .\templates\main\notification.html:47
+msgid "Administrator"
+msgstr ""
+
+#: .\templates\main\notification.html:64
+msgid "Уou did not write to technical support"
+msgstr ""
+
+#: .\templates\main\project_list.html:11
+msgid "List of projects"
+msgstr ""
+
+#: .\templates\organization\create.html:12
+msgid "Create organizations"
+msgstr ""
+
+#: .\templates\organization\create.html:16
+#: .\templates\organization\profille.html:56
+#: .\templates\organization\update_profille.html:38
+msgid "Name of the organization"
+msgstr ""
+
+#: .\templates\organization\create.html:20
+msgid "Described"
+msgstr ""
+
+#: .\templates\organization\create.html:23
+#: .\templates\organization\project_create.html:62
+#: .\templates\organization\update_profille.html:51
+msgid "Save"
+msgstr ""
+
+#: .\templates\organization\index.html:28
+msgid "List of projects "
+msgstr ""
+
+#: .\templates\organization\index.html:31
+msgid "Add project"
+msgstr ""
+
+#: .\templates\organization\profille.html:25
+#: .\templates\volunteers\profile.html:41
+msgid "Full name"
+msgstr ""
+
+#: .\templates\organization\profille.html:34
+#: .\templates\volunteers\profile.html:50
+msgid "Email address"
+msgstr ""
+
+#: .\templates\organization\profille.html:43
+#: .\templates\volunteers\profile.html:59
+msgid "Role"
+msgstr ""
+
+#: .\templates\organization\profille.html:47
+msgid "Organization"
+msgstr ""
+
+#: .\templates\organization\profille.html:60
+msgid "Click "
+msgstr ""
+
+#: .\templates\organization\profille.html:60
+msgid "Add Organizations"
+msgstr ""
+
+#: .\templates\organization\profille.html:60
+msgid "to display your organization."
+msgstr ""
+
+#: .\templates\organization\profille.html:69
+msgid "Edit"
+msgstr ""
+
+#: .\templates\organization\project_create.html:13
+msgid "Create project"
+msgstr ""
+
+#: .\templates\organization\project_create.html:19
+msgid "Title"
+msgstr ""
+
+#: .\templates\organization\project_create.html:25
+msgid "Location"
+msgstr ""
+
+#: .\templates\organization\project_create.html:31
+msgid "Category"
+msgstr ""
+
+#: .\templates\organization\project_create.html:37
+msgid "Project end date"
+msgstr ""
+
+#: .\templates\organization\project_create.html:43
+msgid "Number of volunteers"
+msgstr ""
+
+#: .\templates\organization\project_create.html:49
+msgid "Photo"
+msgstr ""
+
+#: .\templates\organization\project_create.html:55
+#: .\templates\organization\update_profille.html:44
+msgid "Description"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:12
+#: .\templates\volunteers\project_detail.html:12
+msgid "Project Information"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:34
+#: .\templates\volunteers\project_detail.html:42
+msgid "confirmed volunteers"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:38
+#: .\templates\volunteers\project_detail.html:46
+msgid "About the project"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:49
+#: .\templates\volunteers\project_detail.html:54
+msgid "Organization Information"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:60
+msgid "List of volunteers"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:65
+msgid "First name Last name"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:66
+msgid "Rolle"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:67
+#: .\templates\volunteers\profile.html:72
+msgid "Rating"
+msgstr ""
+
+#: .\templates\organization\projects_detail.html:91
+msgid "Send rating"
+msgstr ""
+
+#: .\templates\organization\update_profille.html:19
+msgid "First name"
+msgstr ""
+
+#: .\templates\organization\update_profille.html:25
+msgid "Last name"
+msgstr ""
+
+#: .\templates\organization\update_profille.html:31
+msgid "Email"
+msgstr ""
+
+#: .\templates\volunteers\profile.html:11
+msgid "Profille Information"
+msgstr ""
+
+#: .\templates\volunteers\profile.html:81
+msgid "Achievements"
+msgstr ""
+
+#: .\templates\volunteers\project_detail.html:67
+msgid "Join the project"
+msgstr ""
+
+#: .\templates\volunteers\project_detail.html:71
+msgid "You are a member of the project"
+msgstr ""
+
+#: .\templates\volunteers\project_detail.html:77
+msgid "join "
+msgstr ""

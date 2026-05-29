@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="page-content bg-white">
+		
+	<!-- Banner  -->
+	<div class="dz-bnr-inr dz-bnr-inr-sm style-1 text-center overlay-primary-dark" style="">
+		<div class="container">
+			<div class="dz-bnr-inr-entry">
+				<h1>{% trans "Жоба туралы ақпарат" %}</h1>
+				<!-- Breadcrumb Row -->
+				<nav aria-label="breadcrumb" class="breadcrumb-row">
+					<ul class="breadcrumb">
+						<li class="breadcrumb-item"><a href="{% url 'main:main' %}">{% trans "Басты бет" %}</a></li>
+						<li class="breadcrumb-item active" aria-current="page">{{projects_details.title}}</li>
+					</ul>
+				</nav>
+				<!-- Breadcrumb Row End -->
+			</div>
+		</div>
+	</div>
+	<!-- Banner End -->
+	
+	<!-- Fundraiser Detail -->
+	<section class="content-inner-2">
+		<div class="container">	
+			<div class="row">
+				<div class="col-xl-8 col-lg-8 m-b30">
+					<div class="fundraiser-single">
+						<img src="{{projects_details.photo.url}}">
+						<h2 class="title">{{projects_details.title}}</h2>
+						<div class="dz-meta">
+							<ul>
+								<li class="post-date"><i class="fa-solid fa-calendar-days"></i> 7{{projects_details.created_date}} - {{projects_details.end_date}}</li>
+							</ul>
+							<ul>
+								<li class="post-date"><i class="fas fa-map-marker-alt"></i>  {{projects_details.location}} </li>
+							</ul>
+							<ul>
+								<li class="post-date"><i class="fa fa-users"></i>  {{projects_details.number_of_volunteers}} {% trans "confirmed volunteers" %}</li>
+							</ul>
+						</div>
+						<p>
+							<h4>{% trans "Жоба туралы ақпарат" %}</h4>
+							{{projects_details.comment}}
+						</p>
+	
+					</div>
+
+					<div class="widget style-1 widget_refer">
+						<div class="widget-title">
+							<h4 class="title">{% trans "Ұйым туралы толығырақ" %}</h4>
+						</div>	
+						<h6>{{projects_details.organization_id.title}}</h6>
+						<p>{{projects_details.organization_id.content}}</p>
+					</div>
+				
+				</div>
+				
+				<div class="col-xl-4 col-lg-4">
+					<aside class="side-bar sticky-top">
+						<!--  Donate Now -->
+						<div class="widget style-1 widget_donate">
+							<h4 class="mb-3">{% trans "Жобаға қосылыңыз" %}</h4>
+							{% if request.user.is_authenticated %}
+								{% if projects_details.responseproject %}
+									<h6 style="color: red">{% trans "Сіз жобаның мүшесісіз" %}</h6>
+								{% else %}
+									<form action="" method="post">
+									{% csrf_token %}
+										<input type="hidden" name="user_id" value="{{request.user.id}}">
+										<input type="hidden" name="projects_id" value="{{projects_details.id}}">
+										<button type="submit" class="btn btn-donate btn-primary w-100">{% trans "Қосылу " %}</button>
+									</form>
+								{% endif %}
+							{% else %}
+								<a href="{% url 'account:login' %}" class="badge badge-primary btn-login">
+										<i class="flaticon-logout me-2" ></i>{% trans "Кіру / Тіркелу" %}
+									</a>
+							{% endif %}
+	
+						</div>
+							
+					</aside>
+				</div>
+				
+			</div>
+		</div>
+	</section>
+	
+</div>
+{% endblock %}

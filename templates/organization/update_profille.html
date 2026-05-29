@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-8" style="margin: 0 auto">
+
+			<h1 class="text-center"></h1>
+			<form action="" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Есімі" %}</label>
+							{{user_form.first_name|add_class:"form-control"}}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Тегі" %}</label>
+							{{user_form.last_name|add_class:"form-control"}}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Email" %}</label>
+							{{user_form.email|add_class:"form-control"}}
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Ұйымның атауы" %}</label>
+							{{form.title|add_class:"form-control"}}
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>{% trans "Сипаттамасы" %}</label>
+							{{form.content|add_class:"form-control"}}
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="form-group">
+							<input type="submit" value='{% trans "Сақтау" %}' class="w-100 btn facebook btn-primary btn-sm" name="">
+						</div>
+					</div>
+
+				</div>
+				
+				
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load main_tags %}
+{% block content %}
+	<div class="page-content bg-white">	
+		<!-- Banner Start -->
+		<div class="banner-one">
+			<div class="container">
+				<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+				  <div class="carousel-indicators">
+				    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+				    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+				    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+				  </div>
+				  <div class="carousel-inner">
+				    <div class="carousel-item active" data-bs-interval="10000">
+				      <img src="{% static 'img/sid1.jpg' %}" class="d-block w-100" alt="...">
+				      
+				    </div>
+				    <div class="carousel-item" data-bs-interval="2000">
+				      <img src="{% static 'img/sid2.jpg' %}" class="d-block w-100" alt="...">
+				      
+				    </div>
+				    <div class="carousel-item">
+				      <img src="{% static 'img/sid1.jpg' %}" class="d-block w-100" alt="...">
+				      
+				    </div>
+				  </div>
+				  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+				    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				    <span class="visually-hidden">Алдыңғы</span>
+				  </button>
+				  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+				    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+				    <span class="visually-hidden">Келесі</span>
+				  </button>
+				</div>
+				
+			</div>
+		</div>
+		<!-- Banner End -->
+		
+		<div class="content-inner-3 section-pattren1">
+			<div class="container">
+				<div class="section-head text-center wow fadeInUp" data-wow-delay="0.2s">
+
+					<div class="row mt-3">
+						<div class="col-xl-4 col-lg-4 col-sm-6">
+							<div class="icon-bx-wraper style-1 m-b30" style="height: 260px">
+								<div class="icon-lg m-b30"> <a href="{% url 'main:project_list' %}" class="icon-cell">
+									<i class="flaticon-responsibility"></i>
+								</a> </div>
+								<div class="icon-content">
+									<h5 class="dz-tilte text-capitalize">{% trans "Волонтерлік жобалар" %}</h5>
+									<p>{% trans "Өзіңіздің мекен жайыңыздағы барлық маңызды оқиғалардан хабардар болыңыз" %}</p>
+								</div>
+							</div>
+						</div>
+										
+						<div class="col-xl-4 col-lg-4 col-sm-6">
+							<div class="icon-bx-wraper style-1 m-b30" style="height: 260px">
+								<div class="icon-lg m-b30"> <a href="{% url 'main:project_list' %}" class="icon-cell">
+									<i class="flaticon-open-book"></i>
+								</a> </div>
+								<div class="icon-content">
+									<h5 class="dz-tilte m-b5 text-capitalize">{% trans "Біз бірге әлемді өзгертеміз" %}</h5>
+									<p>{% trans "Көптеген волонтерлік жобаларға қосылыңыз және мемлекеттік қызмет тарихында өз таңбаңызды қалдырыңыз." %}</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xl-4 col-lg-4 col-sm-6">
+						<div class="icon-bx-wraper style-1 m-b30" style="height: 260px">
+							<div class="icon-lg m-b30"> <a href="{% url 'main:project_list' %}" class="icon-cell">
+								<i class="flaticon-handshake"></i>
+							</a> </div>
+							<div class="icon-content">
+								<h5 class="dz-tilte m-b5 text-capitalize">{% trans "Сіздің үлесіңіз баға жетпес" %}</h5>
+								<p>{% trans "Біздің волонтерлар қауымдастығының мүшесі болыңыз және оған мұқтаж адамдарға көмектесіңіз." %}</p>
+							</div>
+						</div>
+					</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="content-inner" id="projects">
+			<div class="container">
+				<div class="section-head text-center wow fadeInUp" data-wow-delay="0.2s">
+					<h2>{% trans "Соңғы жобалар" %}</h2>
+				</div>
+				<div class="row">
+					<div class="col-xl-4 col-lg-5 m-b40 dz-order-1">
+						
+						<aside class="side-bar sticky-top">
+							<!-- Categories -->
+							<div class="widget style-1 widget_checkbox_filter">
+								<div class="widget-title">
+									<h4 class="title">{% trans "Category " %}</h4>
+								</div>
+                                <ul>
+                                	<li>
+										<div class="form-check custom-checkbox checkbox-secondary">
+											<a href="{% url 'main:main' %}">{% trans "Барлығы" %}</a>
+										</div>
+									</li>
+                                	{% for category in categorys %}
+                                    <li>
+										<div class="form-check custom-checkbox checkbox-secondary">
+											<a href="{% url 'main:category' category.id %}">{{ category.title }}</a>
+										</div>
+									</li>
+									{% endfor %}
+                                </ul>
+                            </div>
+						</aside>
+					</div>
+					<div class="col-xl-8 col-lg-7 m-b50">
+						
+						<div class="row">
+							{% if projects %}
+								{% for project in projects %}
+									<div class="col-md-6 mb-3">
+										<div class="dz-card style-2 overlay-skew wow fadeInUp" data-wow-delay="0.2s" style="height: 400px">
+											<div class="dz-media">
+												<a href="fundraiser-detail.html">
+													<img src="{{ project.photo.url }}" style="height: 220px" alt="">
+												</a>
+											</div>
+											<div class="dz-info">
+												<ul class="dz-category">
+													<li>{{ project.category }}</li>
+												</ul>
+												<h5 class="dz-title"><a href="{% url 'volunteers:project_detail_view' pk=project.id %}">{{ project.title|truncatewords:2|linebreaks }}</a></h5>
+												<div class="author-wrappper">
+													<div class="author-media">
+														<img src="{{project.organization_id.user_id.photo.url}}" alt="">
+													</div>
+													<div class="author-content">
+														<div class="author-head">
+															<h6 class="author-name">{{ project.organization_id.user_id }}</h6>
+															
+														</div>
+														<ul class="author-meta">
+															<li class="location">{{ project.location }}</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								<div class="col-md-12">
+									<div class="dz-card style-2 overlay-skew wow fadeInUp">
+										<div class="dz-info text-center">
+											
+											<h5 class="mt-3 mb-3">{% trans "Сіз таңдаған санатта жобалар жоқ" %}</h5>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		
+		<!-- Counter -->
+		<div class="counter-wrapper-1 content-inner-3">
+			<div class="container">
+				<div class="counter-inner bg-secondary">
+					<div class="row">
+						<div class="col-lg-4 col-6 m-b30 wow fadeInUp" data-wow-delay="0.2s">
+							<div class="counter-style-1 text-center">
+								<span class="counter counter-num">{% news_count %}</span>
+								<p class="counter-text">{% trans "Жаңалықтар" %}</p>
+							</div>
+						</div>
+						<div class="col-lg-4 col-6 m-b30 wow fadeInUp" data-wow-delay="0.6s">
+							<div class="counter-style-1 text-center">
+								<span class="counter-num counter">{% project_count %}</span>
+								<p class="counter-text">{% trans "Жобалар" %}</p>
+							</div>
+						</div>
+						<div class="col-lg-4 col-6 m-b30 wow fadeInUp" data-wow-delay="0.8s">
+							<div class="counter-style-1 text-center">
+								<span class="counter counter-num">{% volunteer_count %}</span>
+								<p class="counter-text">{% trans "Волонтерлер" %}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Counter End -->
+		
+		<!-- Our Blog  -->
+		<section class="content-inner-2 section-pattren1 mb-3" id="news">
+			<div class="container">
+				<div class="section-head text-center wow fadeInUp" data-wow-delay="0.2s">
+					<h2 class="title">{% trans "Соңғы жаңалықтар" %}</h2>
+					
+				</div>
+				<div class="row">
+					{% for news in my_news %}
+					<div class="col-md-4">
+						<div class="dz-card style-1 wow fadeInUp" data-wow-delay="0.2s" style="height: 600px">
+							<div class="dz-media">
+								<a href="blog-details.html"><img src="{{ news.photo.url }}" style="height: 250px" alt=""></a>
+								<a href="{% url 'news:news_detail' pk=news.id %}" class="btn btn-secondary">{% trans "Толығырақ" %}</a>
+							</div>
+							<div class="dz-info">
+								<h5 class="dz-title">{{ news.title|truncatewords:5|linebreaks  }}</h5>
+								<p>{{ news.content|truncatewords:15|linebreaks }}</p>
+								
+								<div class="author-wrappper">
+									<div class="author-content">
+										<ul class="author-meta">
+											<li class="date">{{ news.created_date }}</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</section>
+		<!-- Our Blog End  -->
+		
+	
+		
+	</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">{% trans "Техникалық қолдау" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="post">
+      	{% csrf_token %}
+	      <div class="modal-body">
+	        <div class="mb-3">
+	        	<label>{% trans "Тақырыбы" %}</label>
+	        	{{form.title}}
+	        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Жабу" %}</button>
+	        <button type="submit" class="btn btn-primary">{% trans "Жіберу" %}</button>
+	      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% if request.user.is_authenticated %}
+
+<a href="https://support.w3itexperts.com" target="_blank" class="DZ-bt-support-now DZ-theme-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><svg id="Capa_1" enable-background="new 0 0 512 512" height="40" viewBox="0 0 512 512" width="40" xmlns="http://www.w3.org/2000/svg"><g><path d="m483.637 213.16c-10.222-6.317-21.601-7.603-31.637-6.615v-10.545c0-107.799-88.214-196-196-196-107.799 0-196 88.214-196 196v10.545c-10.036-.989-21.416.298-31.637 6.615-18.821 11.632-28.363 36.139-28.363 72.84 0 36.762 9.56 61.399 28.415 73.228 9.366 5.876 20.304 7.917 31.585 6.947v10.825c0 8.284 6.716 15 15 15h60c8.284 0 15-6.716 15-15v-181c0-8.284-6.716-15-15-15h-44.315c7.608-84.529 78.839-151 165.315-151s157.707 66.471 165.315 151h-44.315c-8.284 0-15 6.716-15 15v181c0 8.284 6.716 15 15 15h45v15c0 24.813-20.187 45-45 45h-48.58c-6.192-17.458-22.865-30-42.42-30h-30c-24.813 0-45 20.187-45 45s20.187 45 45 45h30c19.555 0 36.228-12.542 42.42-30h48.58c41.355 0 75-33.645 75-75 0-18.271 0-28.969 0-40.826 11.282.97 22.221-1.072 31.585-6.947 18.855-11.828 28.415-36.465 28.415-73.227 0-36.701-9.542-61.208-28.363-72.84zm-423.637 122.821c-4.786.833-10.768.891-15.642-2.167-9.259-5.808-14.358-22.789-14.358-47.814 0-24.785 4.985-41.569 14.036-47.259 4.894-3.077 11.06-2.858 15.964-1.89zm60-124.981v151h-30v-151zm166 271h-30c-8.271 0-15-6.729-15-15s6.729-15 15-15h30c8.271 0 15 6.729 15 15s-6.729 15-15 15zm136-120h-30v-151h30zm45.749-28.253c-4.848 3.095-10.896 3.035-15.749 2.194v-99.089c4.904-.968 11.069-1.187 15.964 1.89 9.051 5.689 14.036 22.473 14.036 47.258 0 24.923-5.062 41.88-14.251 47.747z"></path></g></svg><span>{% trans "Техникалық қолдау" %}</span></a>
+{% endif %}
+{% endblock %}

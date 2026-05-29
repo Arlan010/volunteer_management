@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container mt-3 mb-3">
+	<div class="row">
+		<div class="col-md-5 col-sm-12" style="margin: 0 auto;">
+			  <h1>{% trans "Жүйеге тіркелу" %}</h1>
+			  <p>{% trans "Жүйеге тіркелу үшін келесі форманы толтырыңыз:" %}</p>
+			  <form method="post" enctype="multipart/form-data">
+			    {{ registration_form.as_p }}
+			    {% csrf_token %}
+			     <button type="submit" class="btn btn-outline-primary btn-block">{% trans "Аккаунт құру" %}</button>
+			  </form>
+		</div>
+	</div>
+</div>
+{% endblock %}

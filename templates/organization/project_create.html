@@ -1,0 +1,73 @@
+
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-8" style="margin: 0 auto">
+
+			<h1 class="text-center">{% trans "Жобаны құру" %}</h1>
+			<form action="" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Тақырыбы" %}</label>
+							{{form.title|add_class:"form-control" }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Мекен жайы" %}</label>
+							{{form.location|add_class:"form-control" }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Санат" %}</label>
+							{{form.category|add_class:"form-control" }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Жобаның бітетін уақыты" %}</label>
+							{{form.end_date|add_class:"form-control" }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Волонтерлер саны" %}</label>
+							{{form.number_of_volunteers|add_class:"form-control" }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{% trans "Фото" %}</label>
+							{{form.photo|add_class:"form-control" }}
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>{% trans "Жобаның сипаттамасы" %}</label>
+							{{form.comment|add_class:"form-control" }}
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="form-group">
+							<input type="submit" value='{% trans "Сақтау" %}' class="w-100 btn facebook btn-primary btn-sm" name="">
+						</div>
+					</div>
+
+				</div>
+				
+				
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

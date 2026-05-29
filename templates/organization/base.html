@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+  <div id="header" class="d-flex"> 
+    <span class="logo d-block">Ұйым</span>
+    <a class="d-block" href="{% url 'account:logout' %}">Шығу</a>
+  </div>
+  <div id="content">
+    <div class="row">
+      <div class="col-md-4">
+        <h2>main</h2>
+        <ul>
+          <li>
+            <a href="{% url 'organization:organization_info_view' %}">Ұйым жайлы</a>
+          </li>
+          <li>
+            <a href="{% url 'organization:project_view' %}">Жобалар</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-8">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+    
+  </div>
+</body>
+</html>

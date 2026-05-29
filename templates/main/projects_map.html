@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load main_tags %}
+{% block content %}
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOejwdWec0_6Fmi5u__aub-ggElulNAb4&callback=initMap"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <style>
+        #map {
+            height: 600px; /* Высота карты */
+            width: 100%; /* Ширина карты, 100% чтобы занимала всю доступную ширину */
+            border: 1px solid #ccc; /* Граница вокруг карты для лучшей видимости */
+            margin-top: 20px; /* Отступ сверху, чтобы не прилипала к элементам выше */
+        }
+        #modal { display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; z-index: 100; border: 1px solid black; }
+        .modal-close { position: absolute; right: 10px; top: 10px; cursor: pointer; }
+        .input-field { margin: 10px 0; }
+        .input-field input, .input-field select { width: 100%; }
+    </style>
+<!-- Модальное окно для информации о проекте -->
+<div id="projectModal" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; z-index: 100; border: 1px solid black;">
+    <div class="modal-close" onclick="$('#projectModal').hide();">Жабу</div>
+    <h2 id="modalTitle"></h2>
+    <p id="modalDescription"></p>
+    <p id="modalDate"></p>
+    <p id="modalStatus"></p>
+</div>
+
+    <div id="map"></div>
+    <div id="modal">
+    <div class="modal-close" onclick="$('#modal').hide();">Жабу</div>
+    <h2>Жаңа ерікті жоба</h2>
+    <div class="input-field">
+        <label>Атауы:</label>
+        <input type="text" id="title">
+    </div>
+    <div class="input-field">
+        <label>Сипаттама:</label>
+        <textarea id="description"></textarea>
+    </div>
+    <div class="input-field">
+        <label>Ендік:</label>
+        <input type="text" id="latitude" readonly>
+    </div>
+    <div class="input-field">
+        <label>Бойлық:</label>
+        <input type="text" id="longitude" readonly>
+    </div>
+    <div class="input-field">
+        <label>Басталу күні:</label>
+        <input type="date" id="start_date">
+    </div>
+    <div class="input-field">
+        <label>Мәртебесі:</label>
+        <select id="status">
+            <option value="current">Ағымдағы</option>
+            <option value="not_current">Өзекті емес</option>
+        </select>
+    </div>
+    <button onclick="saveProject()">Сақтау</button>
+</div>
+
+
+    <script>
+    var projects = {{ projects|safe }};
+
+    function initMap() {
+        var customMapStyle = [
+    {
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#f5f5f5"
+            }
+        ]
+    },
+    {
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#616161"
+            }
+        ]
+    },
+    {
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#f5f5f5"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.land_parcel",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#bdbdbd"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#eeeeee"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#757575"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#e5e5e5"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#9e9e9e"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#757575"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#dadada"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#616161"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#9e9e9e"
+            }
+        ]
+    },
+    {
+        "featureType": "transit.line",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#e5e5e5"
+            }
+        ]
+    },
+    {
+        "featureType": "transit.station",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#eeeeee"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#c9c9c9"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#9e9e9e"
+            }
+        ]
+    }
+];
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: {lat: 43.240150, lng: 76.887024},
+            styles: customMapStyle
+        });
+
+        {% for project in projects %}
+          var location = {lat: {{ project.latitude }}, lng: {{ project.longitude }}};
+          var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: '{{ project.title|escapejs }}',
+            icon: {
+              url: 'https://granidobra.ru/wp-content/uploads/2016/10/hands-with-heart.jpg',
+              scaledSize: new google.maps.Size(50, 50)
+            }
+          });
+
+          // Обработчик события клика на маркер
+          marker.addListener('click', function() {
+            document.getElementById('modalTitle').textContent = '{{ project.title|escapejs }}';
+            document.getElementById('modalDescription').textContent = '{{ project.description|escapejs }}';
+            document.getElementById('modalDate').textContent = 'Басталуы: {{ project.start_date|date:"d M Y" }}';
+            document.getElementById('modalStatus').textContent = 'Статус: {{ project.status }}';
+            $('#projectModal').show();
+          });
+        {% endfor %}
+
+        map.addListener('click', function(e) {
+            $('#latitude').val(e.latLng.lat());
+            $('#longitude').val(e.latLng.lng());
+            $('#modal').show();
+        });
+    }
+
+    function saveProject() {
+        var projectData = {
+            title: $('#title').val(),
+            description: $('#description').val(),
+            latitude: $('#latitude').val(),
+            longitude: $('#longitude').val(),
+            start_date: $('#start_date').val(),
+            status: $('#status').val(),
+        };
+
+        $.ajax({
+            url: '/ru/organization/projects/map',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(projectData),
+            success: function(response) {
+                alert('Проект сохранен с ID: ' + response.id);
+                $('#modal').hide();
+                location.reload();  // Перезагрузить карту, чтобы показать новый проект
+            },
+            error: function() {
+                alert('Ошибка сохранения проекта');
+            }
+        });
+    }
+
+    google.maps.event.addDomListener(window, 'load', initMap);
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="dz-bnr-inr style-1 text-center overlay-primary-dark" style="min-height: 200px;">
+	<div class="container">
+		<div class="dz-bnr-inr-entry">
+			<h1>{% trans "Жобалар" %}</h1>
+			<!-- Breadcrumb Row -->
+			<!-- <nav aria-label="breadcrumb" class="breadcrumb-row">
+				<ul class="breadcrumb">
+					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Project Sidebar</li>
+				</ul>
+			</nav> -->
+			<!-- Breadcrumb Row End -->
+		</div>
+	</div>
+</div>
+<div class="content-inner">
+	<div class="container">
+		<div class="row">
+			
+			<div class="col-xl-12 col-lg-12 m-b50">
+				<div class="row align-items-center">
+					<div class="col-xl-9 mb-3 mb-sm-4">
+						<h4 class="m-b0">{% trans "Жобалар тізімі " %}</h4>
+					</div>
+					<div class="col-xl-3 m-b30">
+						<a href="{% url 'organization:project_create' pk=request.user.organization.id %}" class="btn btn-secondary btn-rounded-lg">{% trans "Жобаларды қосу" %}</a>
+					</div>
+				</div>
+				<div class="row">
+					{% for project in projects%}
+					<div class="col-xl-4 m-b30">
+						<div class="dz-card style-2 overlay-skew"  style="height: 400px">
+							<div class="dz-media">
+								<a href="">
+									<img src="{{project.photo.url}}" style="height: 220px" alt="">
+								</a>
+							</div>
+							<div class="dz-info">
+								<ul class="dz-category">
+									<li>{{project.category}}</li>
+								</ul>
+								<h5 class="dz-title">
+									<a href="{% url 'organization:project_detail_view' pk=project.id %}">{{project.title}}</a>
+								</h5>
+								<div class="progress-bx style-1">
+									<ul class="progress-tag">
+										<li class="goal">
+											<i class="lar la-calendar"></i> <span>{{project.created_date}}</span>
+										</li>
+									</ul> 
+								</div>
+								<div class="author-wrappper">
+									<div class="author-content">
+										<ul class="author-meta">
+											<li class="location">{{project.location}}</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

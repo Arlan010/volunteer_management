@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+	<div class="row gutters-sm">
+	    <div class="col-md-4 mb-3">
+	      <div class="card border rounded-1">
+	        <div class="card-body">
+	          <div class="d-flex flex-column align-items-center text-center">
+	            <img src="{{ request.user.photo.url }}" alt="" class="rounded-circle" width="150" height="150" style="height: 150px;">
+	            <div class="mt-3">
+	              <h4>{{ request.user.first_name }}</h4>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="col-md-8">
+	      <div class="card mb-3 border rounded-1">
+	        <div class="card-body">
+	          <div class="row">
+	            <div class="col-sm-3">
+	              <h6 class="mb-0">{% trans "Толық аты жөні" %}</h6>
+	            </div>
+	            <div class="col-sm-9 text-secondary">
+	             {{ request.user.first_name }} {{ request.user.last_name }}
+	            </div>
+	          </div>
+	          <hr>
+	          <div class="row">
+	            <div class="col-sm-3">
+	              <h6 class="mb-0">{% trans "Email address" %}</h6>
+	            </div>
+	            <div class="col-sm-9 text-secondary">
+	             {{ request.user.email }}
+	            </div>
+	          </div>
+	          <hr>
+	          <div class="row">
+	            <div class="col-sm-3">
+	              <h6 class="mb-0">{% trans "Рөлі" %}</h6>
+	            </div>
+	            <div class="col-sm-9 text-secondary">
+	              {% if request.user.role == 2 %}
+	              {% trans "Ұйым" %}
+	              {% elif request.user.role == 1 %}
+	              {% trans "Волонтер" %}
+	              {% endif %}
+	            </div>
+	          </div>
+	          <hr>
+	          <div class="row">
+	            <div class="col-sm-3">
+	              <h6 class="mb-0">{% trans "Ұйымның атауы" %}</h6>
+	            </div>
+	            <div class="col-sm-9 text-secondary">
+	              	{% if not request.user.organization %}
+						{% trans "Басу " %}<a href="{% url 'organization:organization_create_view' %}">{% trans "Ұйымдарды қосу" %}</a> {% trans "ұйымыңызды көрсету үшін." %}
+             		{% else %}
+             			{{ request.user.organization.title }}
+             		{% endif %}
+	            </div>
+	          </div>
+	          <hr>
+	          {% if request.user.organization %}
+	          <div class="row">
+	            <div class="col-sm-12">
+	              <a class="btn btn-info btn-sm" href="{% url 'organization:update_profile_view' pk=request.user.id %}">{% trans "Өңдеу" %}</a>
+	            </div>
+	          </div>
+	          {% endif %}
+	        </div>
+	      </div>
+	    </div>
+	</div>
+</div>	
+{% endblock %}

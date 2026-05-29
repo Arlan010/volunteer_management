@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="page-content bg-white">
+		
+	<!-- Banner  -->
+	<div class="dz-bnr-inr dz-bnr-inr-sm style-1 text-center overlay-primary-dark" style="">
+		<div class="container">
+			<div class="dz-bnr-inr-entry">
+				<h1>{% trans "Жобаның сипаттамасы" %}</h1>
+			</div>
+		</div>
+	</div>
+	<!-- Banner End -->
+	
+	<!-- Fundraiser Detail -->
+	<section class="content-inner-2">
+		<div class="container">	
+			<div class="row">
+				<div class="col-xl-8 col-lg-8 m-b30">
+					<div class="fundraiser-single">
+						<img src="{{projects_details.photo.url}}">
+						<h2 class="title">{{projects_details.title}}</h2>
+						<div class="dz-meta">
+							<ul>
+								<li class="post-date"><i class="fa-solid fa-calendar-days"></i> 7{{projects_details.created_date}} - {{projects_details.end_date}}</li>
+							</ul>
+							<ul>
+								<li class="post-date"><i class="fas fa-map-marker-alt"></i>  {{projects_details.location}} </li>
+							</ul>
+							<ul>
+								<li class="post-date"><i class="fa fa-users"></i>  {{projects_details.number_of_volunteers}} {% trans "confirmed volunteers" %}</li>
+							</ul>
+						</div>
+						<p>
+							<h4>{% trans "Жоба туралы толығырақ" %}</h4>
+							{{projects_details.comment}}
+						</p>
+	
+					</div>			
+				</div>
+				<div class="col-xl-4 col-lg-4">
+					<aside class="side-bar sticky-top">
+						<!--  Donate Now -->
+						<div class="widget style-1 widget_refer">
+							<div class="widget-title">
+								<h4 class="title">{% trans "Ұйым ақпараттары" %}</h4>
+							</div>	
+							<h6>{{projects_details.organization_id.title}}</h6>
+							<p>{{projects_details.organization_id.content}}</p>
+						</div>
+							
+					</aside>
+				</div>
+				<div class="col-md-12">
+					<div>
+						<div class="widget-title style-1">
+							<h4 class="title">{% trans "Волонтерлер тізімі" %}</h4>
+						</div>
+						<div>
+							<table class="table">
+								<tr>
+									<td>{% trans "Аты жөні" %}</td>
+									<td>{% trans "Рөлі" %}</td>
+									<td>{% trans "Рейтинг" %}</td>
+									<td></td>
+								</tr>
+								<tbody>
+									{% for response_project in response_projects %}
+									<tr>
+										<td>{{response_project.user_id.first_name}}</td>
+										<td>
+							              	{% if response_project.user_id.role == 1 %}
+							              		{% trans "Волонтер" %}
+							              	{% endif %}
+										</td>
+										<td>{{response_project.user_id.rating}}</td>
+										<td>
+												<form method="post" action="" class="d-flex" style="">
+													{% csrf_token %}
+													<input type="hidden" name="volunteer_id" value="{{response_project.user_id.id}}">
+													<select name="rating" style="height: 36px; width: 60px" class="form-control">
+														<option value="1">1</option>
+														<option value="2">2</option>
+														<option value="3">3</option>
+														<option value="4">4</option>
+														<option value="5">5</option>
+													</select>&nbsp&nbsp
+													<button type="submit" class="btn btn-secondary btn-sm" name="button" style="height: 36px; width: 160px">{% trans "Рейтинг қою" %}</button>
+													<input type="submit" name="button" value="the volunteer did not come" class="btn btn-sm btn-primary" style="height: 36px;">
+												</form>
+												
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+</div>
+{% endblock %}

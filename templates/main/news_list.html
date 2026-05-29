@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+	<div class="page-content bg-white">	
+		<!-- Banner  -->
+		<div class="dz-bnr-inr dz-bnr-inr-sm style-1 text-center overlay-primary-dark" style="min-height: 60px">
+			<div class="container">
+				<div class="dz-bnr-inr-entry">
+					<h1>{% trans "Жаңалықтар тізімі" %}</h1>
+					
+				</div>
+			</div>
+		</div>
+		<!-- Banner End -->
+		<div class="content-inner" id="projects">
+			<div class="container">
+				
+				<div class="row">
+					<div class="col-xl-12 col-lg-12 m-b50">
+						
+						<div class="row">
+							{% for news in my_news %}
+								<div class="col-md-4" style="padding:10px">
+									<div class="dz-card style-1 wow fadeInUp" data-wow-delay="0.2s" style="height: 600px">
+										<div class="dz-media">
+											<a href="blog-details.html"><img src="{{ news.photo.url }}" style="height: 250px" alt=""></a>
+											<a href="{% url 'news:news_detail' pk=news.id %}" class="btn btn-secondary">{% trans "Толығырақ" %}</a>
+										</div>
+										<div class="dz-info">
+											<h5 class="dz-title">{{ news.title|truncatewords:5|linebreaks  }}</h5>
+											<p>{{ news.content|truncatewords:15|linebreaks }}</p>
+											
+											<div class="author-wrappper">
+												<div class="author-content">
+													<ul class="author-meta">
+														<li class="date">{{ news.created_date }}</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+{% endblock %}

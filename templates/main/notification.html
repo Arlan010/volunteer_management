@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load main_tags %}
+
+{% block content %}
+	<div class="page-content bg-white">	
+		<!-- Banner  -->
+		<div class="dz-bnr-inr dz-bnr-inr-sm style-1 text-center overlay-primary-dark" style="min-height: 60px">
+			<div class="container">
+				<div class="dz-bnr-inr-entry">
+					<h1>{% trans "Хабарландыру" %}</h1>
+					
+				</div>
+			</div>
+		</div>
+		<!-- Banner End -->
+		<div class="content-inner" id="projects">
+			<div class="container comments-area">
+				
+				<div class="widget-title style-1">
+					<h4 class="title">{% trans "Хабарландырулар тізімі" %}</h4>
+				</div>
+				{% if support %}
+					<div class="row">
+						<div class="col-md-10">
+							<div class="clearfix">
+								<!-- comment list END -->
+								<ol class="comment-list">
+									{% for support in support %}
+									<li class="comment">
+										<div class="comment-body">
+											<div class="comment-author vcard"> 
+												<img class="avatar photo" src="{{ support.user_id.photo.url }}" alt=""> 
+												<cite class="fn">{{ support.title }}</cite>
+											</div>
+											<p>{{support.created_date}}</p>
+											<div class="reply"> 
+													<a href="javascript:void(0);" class="comment-reply-link"></a>
+												</div>
+										</div>
+										
+											<ol class="children">
+												<li class="comment odd parent">
+													<div class="comment-body">
+														<div class="comment-author vcard">  
+															<cite class="fn">{% trans "Әкімшілік" %} </cite>
+														</div>
+														<p>{% answer_support support.id %}</p>
+													</div>
+													<!-- list END -->
+												</li>
+											</ol>
+										<!-- list END -->
+									</li>
+									{% endfor %}
+								</ol>
+								<!-- comment list END -->
+								
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<h6>{% trans "Сіз техникалық қолдау қызметіне жазған жоқсыз" %}</h6>
+				{% endif %}
+			</div>
+		</div>
+		
+	</div>
+{% endblock %}
