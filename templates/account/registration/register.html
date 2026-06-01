@@ -1,17 +1,44 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load widget_tweaks %}
+
 {% block content %}
-<div class="container mt-3 mb-3">
-	<div class="row">
-		<div class="col-md-5 col-sm-12" style="margin: 0 auto;">
-			  <h1>{% trans "Жүйеге тіркелу" %}</h1>
-			  <p>{% trans "Жүйеге тіркелу үшін келесі форманы толтырыңыз:" %}</p>
-			  <form method="post" enctype="multipart/form-data">
-			    {{ registration_form.as_p }}
-			    {% csrf_token %}
-			     <button type="submit" class="btn btn-outline-primary btn-block">{% trans "Аккаунт құру" %}</button>
-			  </form>
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-xl">
+		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
+			<div class="card-body">
+				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Жүйеге тіркелу" %}</h1>
+				<p class="mt-2 text-sm text-muted-foreground">{% trans "Жүйеге тіркелу үшін келесі форманы толтырыңыз:" %}</p>
+
+				<form method="post" enctype="multipart/form-data" class="mt-1 space-y-4">
+					{% csrf_token %}
+					{% for field in registration_form %}
+					<label class="form-control">
+						<span class="label-text mb-2">
+							{% if field.name == "username" %}
+								{% trans "Пайдаланушының аты" %}
+							{% elif field.name == "first_name" %}
+								{% trans "Аты" %}
+							{% elif field.name == "email" %}
+								{% trans "Электрондық пошта мекенжайы" %}
+							{% elif field.name == "role" %}
+								{% trans "Рөлі" %}
+							{% elif field.name == "photo" %}
+								{% trans "Фото" %}
+							{% else %}
+								{{ field.label }}
+							{% endif %}
+						</span>
+						{{ field|add_class:"input input-bordered w-full" }}
+						{% if field.errors %}
+						<span class="label-text-alt text-error">{{ field.errors|striptags }}</span>
+						{% endif %}
+					</label>
+					{% endfor %}
+					<button type="submit" class="btn btn-primary w-full">{% trans "Аккаунт құру" %}</button>
+				</form>
+			</div>
 		</div>
 	</div>
-</div>
+</section>
 {% endblock %}

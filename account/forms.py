@@ -10,9 +10,9 @@ class LoginForm(forms.Form):
 
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(label=_('Password'),
+    password = forms.CharField(label=_('Құпиясөз'),
                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2 = forms.CharField(label=_('Repeat password'),
+    password2 = forms.CharField(label=_('Құпиясөзді қайталаңыз'),
                                 widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     class Meta:
         model = UserModel
@@ -24,6 +24,16 @@ class UserRegistrationForm(forms.ModelForm):
             'role': forms.Select(attrs={'class': 'form-control'}),
             'photo': forms.FileInput(attrs={'class': 'form-control'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = _('Пайдаланушының аты')
+        self.fields['first_name'].label = _('Аты')
+        self.fields['email'].label = _('Электрондық пошта мекенжайы')
+        self.fields['role'].label = _('Рөлі')
+        self.fields['role'].required = True
+        self.fields['photo'].label = _('Фото')
+
     def clean_password2(self):
         cd = self.cleaned_data
         if cd['password'] != cd['password2']:

@@ -4,67 +4,44 @@
 {% load main_tags %}
 
 {% block content %}
-	<div class="page-content bg-white">	
-		<!-- Banner  -->
-		<div class="dz-bnr-inr dz-bnr-inr-sm style-1 text-center overlay-primary-dark" style="min-height: 60px">
-			<div class="container">
-				<div class="dz-bnr-inr-entry">
-					<h1>{% trans "Хабарландыру" %}</h1>
-					
-				</div>
-			</div>
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-4xl">
+		<div class="mb-10">
+			<div class="badge badge-outline border-accent text-accent">{% trans "Хабарландыру" %}</div>
+			<h1 class="mt-4 text-4xl font-bold tracking-tight text-foreground">{% trans "Хабарландырулар тізімі" %}</h1>
 		</div>
-		<!-- Banner End -->
-		<div class="content-inner" id="projects">
-			<div class="container comments-area">
-				
-				<div class="widget-title style-1">
-					<h4 class="title">{% trans "Хабарландырулар тізімі" %}</h4>
-				</div>
-				{% if support %}
-					<div class="row">
-						<div class="col-md-10">
-							<div class="clearfix">
-								<!-- comment list END -->
-								<ol class="comment-list">
-									{% for support in support %}
-									<li class="comment">
-										<div class="comment-body">
-											<div class="comment-author vcard"> 
-												<img class="avatar photo" src="{{ support.user_id.photo.url }}" alt=""> 
-												<cite class="fn">{{ support.title }}</cite>
-											</div>
-											<p>{{support.created_date}}</p>
-											<div class="reply"> 
-													<a href="javascript:void(0);" class="comment-reply-link"></a>
-												</div>
-										</div>
-										
-											<ol class="children">
-												<li class="comment odd parent">
-													<div class="comment-body">
-														<div class="comment-author vcard">  
-															<cite class="fn">{% trans "Әкімшілік" %} </cite>
-														</div>
-														<p>{% answer_support support.id %}</p>
-													</div>
-													<!-- list END -->
-												</li>
-											</ol>
-										<!-- list END -->
-									</li>
-									{% endfor %}
-								</ol>
-								<!-- comment list END -->
-								
-							</div>
+
+		{% if support %}
+		<div class="space-y-5">
+			{% for support in support %}
+			<div class="card border border-border/50 bg-card shadow-lg shadow-primary/5">
+				<div class="card-body">
+					<div class="flex items-start gap-4">
+						{% if support.user_id.photo %}
+						<img src="{{ support.user_id.photo.url }}" alt="" class="h-12 w-12 rounded-full object-cover">
+						{% else %}
+						<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary">
+							{{ support.user_id.first_name|default:support.user_id.username|first|upper }}
+						</div>
+						{% endif %}
+						<div class="min-w-0 flex-1">
+							<h2 class="card-title text-foreground">{{ support.title }}</h2>
+							<p class="mt-1 text-sm text-muted-foreground">{{ support.created_date }}</p>
 						</div>
 					</div>
-				{% else %}
-					<h6>{% trans "Сіз техникалық қолдау қызметіне жазған жоқсыз" %}</h6>
-				{% endif %}
+					<div class="mt-5 rounded-xl border border-border/50 bg-secondary/60 p-4">
+						<p class="text-sm font-semibold text-foreground">{% trans "Әкімшілік" %}</p>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{% answer_support support.id %}</p>
+					</div>
+				</div>
 			</div>
+			{% endfor %}
 		</div>
-		
+		{% else %}
+		<div class="alert border border-border bg-card text-muted-foreground">
+			<span>{% trans "Сіз техникалық қолдау қызметіне жазған жоқсыз" %}</span>
+		</div>
+		{% endif %}
 	</div>
+</section>
 {% endblock %}

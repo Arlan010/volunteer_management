@@ -1,0 +1,119 @@
+{% load i18n %}
+{% load static %}
+<header class="fixed top-0 left-0 right-0 z-50 px-4 py-4">
+	<nav class="mx-auto max-w-6xl">
+		<div
+			class="flex items-center justify-between rounded-2xl bg-card/80 px-6 py-3 shadow-lg shadow-primary/5 backdrop-blur-md border border-border/50">
+
+			<a href="{% url 'main:main' %}" class="flex items-center gap-2">
+				<img src="{% static 'images/favicon.ico' %}" alt="Umit Shamy" class="h-9 w-9 rounded-lg object-contain">
+				<span class="text-lg font-bold tracking-tight text-foreground">Umit Shamy</span>
+			</a>
+
+			<div class="hidden items-center gap-8 md:flex">
+				<a href="{% url 'main:main' %}"
+					class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Басты бет</a>
+				<a href="{% url 'main:news_list' %}"
+					class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Жаңалықтар</a>
+				<a href="{% url 'main:project_list' %}"
+					class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Жобалар</a>
+				<a href="{% url 'organization:projects' %}"
+					class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Карта</a>
+			</div>
+
+			<div class="hidden items-center gap-3 md:flex">
+				{% if request.user.is_authenticated %}
+				{% if request.user.is_volunteer %}
+				<span class="badge badge-info text-white font-bold">⭐ Рейтинг: {{ request.user.rating }}</span>
+				<a href="{% url 'volunteers:profile_view' %}"
+					class="text-sm font-semibold text-primary transition-colors hover:text-[#4a00ff]">
+					Менің профилім
+				</a>
+				{% endif %}
+				{% if request.user.is_organization %}
+				{% if request.user.organization %}
+				<a href="{% url 'organization:project_create' pk=request.user.organization.id %}"
+					class="btn btn-primary btn-sm text-white">
+					Жоба қосу +
+				</a>
+				{% endif %}
+				<a href="{% url 'organization:profile_view' %}"
+					class="text-sm font-semibold text-primary transition-colors hover:text-[#4a00ff]">
+					Ұйым профилі
+				</a>
+				{% endif %}
+				<form action="{% url 'account:logout' %}" method="post" class="m-0">
+					{% csrf_token %}
+					<button type="submit" class="rounded-lg px-3 py-2 text-sm font-medium text-error transition-colors hover:bg-error/10">Шығу</button>
+				</form>
+				{% else %}
+				<a href="{% url 'account:login' %}"
+					class="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+					Кіру
+				</a>
+				<a href="{% url 'account:UserRegistrationView' %}"
+					class="inline-flex items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-bold text-accent-foreground shadow-sm transition-colors hover:bg-[#4a00ff] hover:text-white">
+					Тіркелу
+				</a>
+				{% endif %}
+			</div>
+
+			<button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
+				aria-label="Мәзірді ашу">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="text-foreground">
+					<line x1="4" x2="20" y1="12" y2="12" />
+					<line x1="4" x2="20" y1="6" y2="6" />
+					<line x1="4" x2="20" y1="18" y2="18" />
+				</svg>
+			</button>
+		</div>
+
+		<div id="mobile-menu"
+			class="hidden mt-2 rounded-2xl bg-card/95 p-6 shadow-lg backdrop-blur-md md:hidden border border-border/50">
+			<div class="flex flex-col gap-4">
+				<a href="{% url 'main:main' %}"
+					class="text-sm font-medium text-muted-foreground hover:text-foreground">Басты бет</a>
+				<a href="{% url 'main:news_list' %}"
+					class="text-sm font-medium text-muted-foreground hover:text-foreground">Жаңалықтар</a>
+				<a href="{% url 'main:project_list' %}"
+					class="text-sm font-medium text-muted-foreground hover:text-foreground">Жобалар</a>
+				<a href="{% url 'organization:projects' %}"
+					class="text-sm font-medium text-muted-foreground hover:text-foreground">Карта</a>
+				<div class="mt-4 flex flex-col gap-3 pt-4 border-t border-border">
+					{% if request.user.is_authenticated %}
+					{% if request.user.is_volunteer %}
+					<span class="badge badge-info w-fit text-white font-bold">⭐ Рейтинг: {{ request.user.rating }}</span>
+					<a href="{% url 'volunteers:profile_view' %}" class="text-sm font-semibold text-primary">Менің профилім</a>
+					{% endif %}
+					{% if request.user.is_organization %}
+					{% if request.user.organization %}
+					<a href="{% url 'organization:project_create' pk=request.user.organization.id %}"
+						class="btn btn-primary btn-sm text-white">
+						Жоба қосу +
+					</a>
+					{% endif %}
+					<a href="{% url 'organization:profile_view' %}" class="text-sm font-semibold text-primary">Ұйым профилі</a>
+					{% endif %}
+					<form action="{% url 'account:logout' %}" method="post" class="m-0">
+						{% csrf_token %}
+						<button type="submit" class="text-sm text-red-500">Шығу</button>
+					</form>
+				{% else %}
+					<a href="{% url 'account:login' %}" class="rounded-lg py-2 text-center text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">Кіру</a>
+					<a href="{% url 'account:UserRegistrationView' %}"
+						class="inline-flex items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-bold text-accent-foreground shadow-sm transition-colors hover:bg-[#4a00ff] hover:text-white">Тіркелу</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<script>
+	document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+		var menu = document.getElementById('mobile-menu');
+		menu.classList.toggle('hidden');
+	});
+</script>

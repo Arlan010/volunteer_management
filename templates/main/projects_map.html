@@ -3,68 +3,100 @@
 {% load static %}
 {% load main_tags %}
 {% block content %}
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOejwdWec0_6Fmi5u__aub-ggElulNAb4&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOejwdWec0_6Fmi5u__aub-ggElulNAb4&callback=initMap"></script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-    <style>
-        #map {
-            height: 600px; /* Высота карты */
-            width: 100%; /* Ширина карты, 100% чтобы занимала всю доступную ширину */
-            border: 1px solid #ccc; /* Граница вокруг карты для лучшей видимости */
-            margin-top: 20px; /* Отступ сверху, чтобы не прилипала к элементам выше */
-        }
-        #modal { display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; z-index: 100; border: 1px solid black; }
-        .modal-close { position: absolute; right: 10px; top: 10px; cursor: pointer; }
-        .input-field { margin: 10px 0; }
-        .input-field input, .input-field select { width: 100%; }
-    </style>
-<!-- Модальное окно для информации о проекте -->
-<div id="projectModal" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; z-index: 100; border: 1px solid black;">
-    <div class="modal-close" onclick="$('#projectModal').hide();">Жабу</div>
-    <h2 id="modalTitle"></h2>
-    <p id="modalDescription"></p>
-    <p id="modalDate"></p>
-    <p id="modalStatus"></p>
+<style>
+	#map {
+		height: 640px;
+		width: 100%;
+	}
+
+	.map-modal {
+		display: none;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		z-index: 100;
+		width: min(92vw, 520px);
+		transform: translate(-50%, -50%);
+	}
+</style>
+
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-6xl">
+		<div class="mb-8">
+			<div class="badge badge-outline border-accent text-accent">{% trans "Карта" %}</div>
+			<h1 class="mt-4 text-4xl font-bold tracking-tight text-foreground">{% trans "Жобалар картасы" %}</h1>
+			<p class="mt-3 max-w-2xl text-muted-foreground">
+				{% trans "Жобалардың орналасуын картадан көріңіз немесе жаңа нүкте қосыңыз." %}
+			</p>
+		</div>
+
+		<div class="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl shadow-primary/5">
+			<div id="map"></div>
+		</div>
+	</div>
+</section>
+
+<div id="projectModal" class="map-modal">
+	<div class="card border border-border/50 bg-card shadow-2xl">
+		<div class="card-body">
+			<button type="button" class="btn btn-ghost btn-sm absolute right-3 top-3" onclick="$('#projectModal').hide();">✕</button>
+			<h2 id="modalTitle" class="card-title pr-8"></h2>
+			<p id="modalDescription" class="text-sm leading-relaxed text-muted-foreground"></p>
+			<div class="mt-3 space-y-2 text-sm text-muted-foreground">
+				<p id="modalDate"></p>
+				<p id="modalStatus"></p>
+			</div>
+		</div>
+	</div>
 </div>
 
-    <div id="map"></div>
-    <div id="modal">
-    <div class="modal-close" onclick="$('#modal').hide();">Жабу</div>
-    <h2>Жаңа ерікті жоба</h2>
-    <div class="input-field">
-        <label>Атауы:</label>
-        <input type="text" id="title">
-    </div>
-    <div class="input-field">
-        <label>Сипаттама:</label>
-        <textarea id="description"></textarea>
-    </div>
-    <div class="input-field">
-        <label>Ендік:</label>
-        <input type="text" id="latitude" readonly>
-    </div>
-    <div class="input-field">
-        <label>Бойлық:</label>
-        <input type="text" id="longitude" readonly>
-    </div>
-    <div class="input-field">
-        <label>Басталу күні:</label>
-        <input type="date" id="start_date">
-    </div>
-    <div class="input-field">
-        <label>Мәртебесі:</label>
-        <select id="status">
-            <option value="current">Ағымдағы</option>
-            <option value="not_current">Өзекті емес</option>
-        </select>
-    </div>
-    <button onclick="saveProject()">Сақтау</button>
+<div id="modal" class="map-modal">
+	<div class="card border border-border/50 bg-card shadow-2xl">
+		<div class="card-body">
+			<button type="button" class="btn btn-ghost btn-sm absolute right-3 top-3" onclick="$('#modal').hide();">✕</button>
+			<h2 class="card-title">{% trans "Жаңа ерікті жоба" %}</h2>
+			<div class="grid gap-4">
+				<label class="form-control">
+					<span class="label-text">{% trans "Атауы" %}</span>
+					<input type="text" id="title" class="input input-bordered">
+				</label>
+				<label class="form-control">
+					<span class="label-text">{% trans "Сипаттама" %}</span>
+					<textarea id="description" class="textarea textarea-bordered min-h-28"></textarea>
+				</label>
+				<div class="grid gap-4 sm:grid-cols-2">
+					<label class="form-control">
+						<span class="label-text">{% trans "Ендік" %}</span>
+						<input type="text" id="latitude" class="input input-bordered" readonly>
+					</label>
+					<label class="form-control">
+						<span class="label-text">{% trans "Бойлық" %}</span>
+						<input type="text" id="longitude" class="input input-bordered" readonly>
+					</label>
+				</div>
+				<label class="form-control">
+					<span class="label-text">{% trans "Басталу күні" %}</span>
+					<input type="date" id="start_date" class="input input-bordered">
+				</label>
+				<label class="form-control">
+					<span class="label-text">{% trans "Мәртебесі" %}</span>
+					<select id="status" class="select select-bordered">
+						<option value="current">{% trans "Ағымдағы" %}</option>
+						<option value="not_current">{% trans "Өзекті емес" %}</option>
+					</select>
+				</label>
+				<button type="button" onclick="saveProject()" class="btn btn-primary">{% trans "Сақтау" %}</button>
+			</div>
+		</div>
+	</div>
 </div>
 
-
-    <script>
+<script>
     var projects = {{ projects|safe }};
 
     function initMap() {
@@ -250,7 +282,7 @@
           // Обработчик события клика на маркер
           marker.addListener('click', function() {
             document.getElementById('modalTitle').textContent = '{{ project.title|escapejs }}';
-            document.getElementById('modalDescription').textContent = '{{ project.description|escapejs }}';
+            document.getElementById('modalDescription').textContent = '{{ project.comment|default:""|escapejs }}';
             document.getElementById('modalDate').textContent = 'Басталуы: {{ project.start_date|date:"d M Y" }}';
             document.getElementById('modalStatus').textContent = 'Статус: {{ project.status }}';
             $('#projectModal').show();
@@ -280,12 +312,12 @@
             contentType: 'application/json',
             data: JSON.stringify(projectData),
             success: function(response) {
-                alert('Проект сохранен с ID: ' + response.id);
+                alert('Жоба сақталды. ID: ' + response.id);
                 $('#modal').hide();
                 location.reload();  // Перезагрузить карту, чтобы показать новый проект
             },
             error: function() {
-                alert('Ошибка сохранения проекта');
+                alert('Жобаны сақтау кезінде қате пайда болды');
             }
         });
     }

@@ -1,35 +1,93 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html>
+<html lang="kk" data-theme="light">
+
 <head>
-  <title>{% block title %}{% endblock %}</title>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}{% trans "Ұйым" %}{% endblock %}</title>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		:root {
+			--s: 92% 0.025 285;
+			--sc: 32% 0.10 270;
+		}
+
+		.text-xs {
+			font-size: 0.95rem !important;
+			line-height: 1.45rem !important;
+		}
+
+		.text-sm,
+		.label-text,
+		.label-text-alt {
+			font-size: 1rem !important;
+			line-height: 1.55rem !important;
+		}
+
+		.badge {
+			min-height: 2rem !important;
+			height: auto !important;
+			padding: 0.45rem 0.8rem !important;
+			font-size: 1rem !important;
+			line-height: 1.35rem !important;
+			white-space: normal !important;
+		}
+
+		.btn-sm {
+			min-height: 2.5rem !important;
+			height: auto !important;
+			padding: 0.55rem 0.95rem !important;
+			font-size: 1rem !important;
+			line-height: 1.35rem !important;
+		}
+
+		.card-body {
+			gap: 0.75rem;
+		}
+
+		.card-title {
+			font-size: 1.35rem !important;
+			line-height: 1.8rem !important;
+		}
+
+		.badge-secondary {
+			background-color: oklch(0.92 0.025 285) !important;
+			border-color: oklch(0.84 0.045 285) !important;
+			color: oklch(0.32 0.10 270) !important;
+		}
+
+	</style>
 </head>
-<body>
-  <div id="header" class="d-flex"> 
-    <span class="logo d-block">Ұйым</span>
-    <a class="d-block" href="{% url 'account:logout' %}">Шығу</a>
-  </div>
-  <div id="content">
-    <div class="row">
-      <div class="col-md-4">
-        <h2>main</h2>
-        <ul>
-          <li>
-            <a href="{% url 'organization:organization_info_view' %}">Ұйым жайлы</a>
-          </li>
-          <li>
-            <a href="{% url 'organization:project_view' %}">Жобалар</a>
-          </li>
-        </ul>
-      </div>
-      <div class="col-md-8">
-        {% block content %}
-        {% endblock %}
-      </div>
-    </div>
-    
-  </div>
+
+<body class="min-h-screen bg-base-200 text-base-content">
+	<header class="border-b border-base-300 bg-base-100">
+		<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+			<a href="{% url 'organization:organization_info_view' %}" class="text-xl font-bold">{% trans "Ұйым" %}</a>
+			<form action="{% url 'account:logout' %}" method="post" class="m-0">
+				{% csrf_token %}
+				<button type="submit" class="btn btn-outline btn-sm">{% trans "Шығу" %}</button>
+			</form>
+		</div>
+	</header>
+
+	<main class="mx-auto grid max-w-6xl gap-6 px-4 py-8 md:grid-cols-[260px_1fr]">
+		<aside class="card h-fit bg-base-100 shadow">
+			<div class="card-body">
+				<h2 class="card-title text-base">{% trans "Мәзір" %}</h2>
+				<ul class="menu rounded-box p-0">
+					<li><a href="{% url 'organization:organization_info_view' %}">{% trans "Ұйым жайлы" %}</a></li>
+					<li><a href="{% url 'organization:project_view' %}">{% trans "Жобалар" %}</a></li>
+				</ul>
+			</div>
+		</aside>
+		<section>
+			{% block content %}
+			{% endblock %}
+		</section>
+	</main>
 </body>
+
 </html>

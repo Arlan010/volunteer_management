@@ -1,62 +1,41 @@
-
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% load static %}
-
 {% block content %}
-<div class="container">
-	<div class="row">
-		<div class="col-md-8" style="margin: 0 auto">
-
-			<h1 class="text-center"></h1>
-			<form action="" method="POST" enctype="multipart/form-data">
-				{% csrf_token %}
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Есімі" %}</label>
-							{{user_form.first_name|add_class:"form-control"}}
-						</div>
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-3xl">
+		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
+			<div class="card-body">
+				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Профильді өңдеу" %}</h1>
+				<form action="" method="POST" enctype="multipart/form-data" class="mt-6 space-y-5">
+					{% csrf_token %}
+					<div class="grid gap-4 md:grid-cols-2">
+						<label class="form-control">
+							<span class="label-text">{% trans "Есімі" %}</span>
+							{{ user_form.first_name|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Тегі" %}</span>
+							{{ user_form.last_name|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Email" %}</span>
+							{{ user_form.email|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Ұйымның атауы" %}</span>
+							{{ form.title|add_class:"input input-bordered w-full" }}
+						</label>
 					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Тегі" %}</label>
-							{{user_form.last_name|add_class:"form-control"}}
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Email" %}</label>
-							{{user_form.email|add_class:"form-control"}}
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Ұйымның атауы" %}</label>
-							{{form.title|add_class:"form-control"}}
-						</div>
-					</div>
-					<div class="col-md-12">
-						<div class="form-group">
-							<label>{% trans "Сипаттамасы" %}</label>
-							{{form.content|add_class:"form-control"}}
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="form-group">
-							<input type="submit" value='{% trans "Сақтау" %}' class="w-100 btn facebook btn-primary btn-sm" name="">
-						</div>
-					</div>
-
-				</div>
-				
-				
-			</form>
+					<label class="form-control">
+						<span class="label-text">{% trans "Сипаттамасы" %}</span>
+						{{ form.content|add_class:"textarea textarea-bordered min-h-36 w-full" }}
+					</label>
+					<input type="submit" value='{% trans "Сақтау" %}' class="btn btn-primary w-full">
+				</form>
+			</div>
 		</div>
 	</div>
-</div>
+</section>
 {% endblock %}

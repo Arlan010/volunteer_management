@@ -3,38 +3,16 @@
 {% load static %}
 
 {% block content %}
-<div class="page-content bg-white">
-			
-	<section class="content-inner-2">
-		<div class="container">			
-			<div class="row ">
-				<div class="col-xl-8 col-lg-8 m-b30">
-					<div class="dz-card blog-single sidebar">
-						<div class="dz-media">
-							<img src="{{news.photo.url}}" alt="">
-						</div>
-						<div class="dz-info">
-							<div class="dz-meta">
-								<ul>
-									<li class="post-date"><i class="fa-solid fa-calendar-days"></i> {{news.created_date}}</li>
-								</ul>
-							</div>
-							<div class="dz-post-text">
-								<h1 class="dz-title">{{news.title}}</h1>
-								<p>{{news.content}}</p>
-								
-								
-								<!-- <blockquote class="block-quote style-1">
-									<p>“You can make anything look good. Only a quarter of young adults are financially literate. You don’t want to overwhelm them with terrible advice.”</p>
-									<cite> Akcel </cite>
-								</blockquote> -->
-							</div>
-						</div>
-					</div>
-
-				</div>
+<article class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-4xl">
+		<div class="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl shadow-primary/5">
+			<img src="{{ news.photo.url }}" alt="{{ news.title }}" class="h-80 w-full object-cover">
+			<div class="p-6 sm:p-8">
+				<div class="badge badge-ghost mb-4">{{ news.created_date }}</div>
+				<h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{{ news.title }}</h1>
+				<p class="mt-6 whitespace-pre-line leading-relaxed text-muted-foreground">{{ news.content }}</p>
 			</div>
 		</div>
-	</section>
-</div>
+	</div>
+</article>
 {% endblock %}

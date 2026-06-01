@@ -1,73 +1,49 @@
-
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% load static %}
-
 {% block content %}
-<div class="container">
-	<div class="row">
-		<div class="col-md-8" style="margin: 0 auto">
-
-			<h1 class="text-center">{% trans "Жобаны құру" %}</h1>
-			<form action="" method="POST" enctype="multipart/form-data">
-				{% csrf_token %}
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Тақырыбы" %}</label>
-							{{form.title|add_class:"form-control" }}
-						</div>
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-3xl">
+		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
+			<div class="card-body">
+				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Жобаны құру" %}</h1>
+				<form action="" method="POST" enctype="multipart/form-data" class="mt-6 space-y-5">
+					{% csrf_token %}
+					<div class="grid gap-4 md:grid-cols-2">
+						<label class="form-control">
+							<span class="label-text">{% trans "Тақырыбы" %}</span>
+							{{ form.title|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Мекен жайы" %}</span>
+							{{ form.location|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Санат" %}</span>
+							{{ form.category|add_class:"select select-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Жобаның бітетін уақыты" %}</span>
+							{{ form.end_date|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Волонтерлер саны" %}</span>
+							{{ form.number_of_volunteers|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{% trans "Фото" %}</span>
+							{{ form.photo|add_class:"file-input file-input-bordered w-full" }}
+						</label>
 					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Мекен жайы" %}</label>
-							{{form.location|add_class:"form-control" }}
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Санат" %}</label>
-							{{form.category|add_class:"form-control" }}
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Жобаның бітетін уақыты" %}</label>
-							{{form.end_date|add_class:"form-control" }}
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Волонтерлер саны" %}</label>
-							{{form.number_of_volunteers|add_class:"form-control" }}
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>{% trans "Фото" %}</label>
-							{{form.photo|add_class:"form-control" }}
-						</div>
-					</div>
-					<div class="col-md-12">
-						<div class="form-group">
-							<label>{% trans "Жобаның сипаттамасы" %}</label>
-							{{form.comment|add_class:"form-control" }}
-						</div>
-					</div>
-
-					<div class="col-md-12">
-						<div class="form-group">
-							<input type="submit" value='{% trans "Сақтау" %}' class="w-100 btn facebook btn-primary btn-sm" name="">
-						</div>
-					</div>
-
-				</div>
-				
-				
-			</form>
+					<label class="form-control">
+						<span class="label-text">{% trans "Жобаның сипаттамасы" %}</span>
+						{{ form.comment|add_class:"textarea textarea-bordered min-h-36 w-full" }}
+					</label>
+					<input type="submit" value='{% trans "Сақтау" %}' class="btn btn-primary w-full">
+				</form>
+			</div>
 		</div>
 	</div>
-</div>
+</section>
 {% endblock %}

@@ -1,313 +1,147 @@
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="en">
 {% load static %}
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+
 <head>
-	<!-- Meta -->
 	<meta charset="utf-8">
-	<!-- Mobile Specific -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- Title -->
-	<title>Aurora </title>
-	<!-- Favicon icon -->
-    <link rel="icon" type="image/png" href="images/favicon.png">
-	<link href="vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-	<link rel="stylesheet" class="skin" href="{% static 'css/skin/skin-1.css' %}">
-	<style type="text/css">
-		a.active{
-			color: red;
+	<title>{% block title %}Үміт Шамы - Үміт Ұшқыны | Волонтерлік платформа{% endblock %}</title>
+	<link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+		rel="stylesheet">
+
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css" rel="stylesheet" type="text/css">
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<style>
+		:root {
+			--background: oklch(0.97 0.005 270);
+			--foreground: oklch(0.25 0.05 270);
+			--card: oklch(1 0 0);
+			--card-foreground: oklch(0.25 0.05 270);
+			--primary: oklch(0.35 0.12 270);
+			--primary-foreground: oklch(0.98 0 0);
+			--secondary: oklch(0.94 0.02 270);
+			--secondary-foreground: oklch(0.35 0.12 270);
+			--muted: oklch(0.94 0.01 270);
+			--muted-foreground: oklch(0.5 0.03 270);
+			--accent: oklch(0.75 0.18 55);
+			--accent-foreground: oklch(0.25 0.05 55);
+			--border: oklch(0.90 0.01 270);
+			--radius: 0.75rem;
+			--s: 92% 0.025 285;
+			--sc: 32% 0.10 270;
 		}
+
+		body {
+			background-color: var(--background);
+			color: var(--foreground);
+		}
+
+		.text-xs {
+			font-size: 0.95rem !important;
+			line-height: 1.45rem !important;
+		}
+
+		.text-sm,
+		.label-text,
+		.label-text-alt {
+			font-size: 1rem !important;
+			line-height: 1.55rem !important;
+		}
+
+		.badge {
+			min-height: 2rem !important;
+			height: auto !important;
+			padding: 0.45rem 0.8rem !important;
+			font-size: 1rem !important;
+			line-height: 1.35rem !important;
+			white-space: normal !important;
+		}
+
+		.btn-sm {
+			min-height: 2.5rem !important;
+			height: auto !important;
+			padding: 0.55rem 0.95rem !important;
+			font-size: 1rem !important;
+			line-height: 1.35rem !important;
+		}
+
+		.card-body {
+			gap: 0.75rem;
+		}
+
+		.card-title {
+			font-size: 1.35rem !important;
+			line-height: 1.8rem !important;
+		}
+
+		.badge-secondary {
+			background-color: oklch(0.92 0.025 285) !important;
+			border-color: oklch(0.84 0.045 285) !important;
+			color: oklch(0.32 0.10 270) !important;
+		}
+
 	</style>
+
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					fontFamily: {
+						sans: ['Montserrat', 'system-ui', 'sans-serif'],
+					},
+					colors: {
+						background: 'var(--background)',
+						foreground: 'var(--foreground)',
+						border: 'var(--border)',
+						card: {
+							DEFAULT: 'var(--card)',
+							foreground: 'var(--card-foreground)',
+						},
+						primary: {
+							DEFAULT: 'var(--primary)',
+							foreground: 'var(--primary-foreground)',
+						},
+						secondary: {
+							DEFAULT: 'var(--secondary)',
+							foreground: 'var(--secondary-foreground)',
+						},
+						accent: {
+							DEFAULT: 'var(--accent)',
+							foreground: 'var(--accent-foreground)',
+						},
+						muted: {
+							DEFAULT: 'var(--muted)',
+							foreground: 'var(--muted-foreground)',
+						},
+					},
+					borderRadius: {
+						xl: 'var(--radius)',
+						'2xl': 'calc(var(--radius) + 4px)',
+						'3xl': 'calc(var(--radius) + 8px)',
+					}
+				}
+			}
+		}
+	</script>
 </head>
-<body id="bg">
-{% if messages %}
-	{% for message in messages %}
-		<div class="alert alert-warning alert-dismissible fade show" role="alert">
-		  <strong>{{ message }} .
-		  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="color: #333;font-weight: 500">X</button>
-		</div>
 
-	{% endfor %}
-{% endif %}
-<div class="page-wraper">
+<body class="font-sans antialiased min-h-screen flex flex-col">
 
-	<!-- Header -->
-	<header class="site-header mo-left header style-1">
-		<!-- Top Header -->
-		<div class="top-bar">
-			<div class="container">
-				<div class="dz-topbar-inner d-flex justify-content-between align-items-center">
-					<div class="dz-topbar-left">
-						<ul>
-							<li>{% trans "Волонтерлік жобалар" %}</li>
-							
-						</ul>
-					</div>
-					<div class="dz-topbar-right">
-						<ul>
-							<li><i class="fas fa-phone"></i>+7 777 999 99 99</li>
-							<li><i class="fas fa-envelope"></i>support@example.com</li>
-<!--							<li>-->
-<!--								{% get_current_language as LANGUAGE_CODE %}-->
-<!--								  {% get_available_languages as LANGUAGES %}-->
-<!--								  {% get_language_info_list for LANGUAGES as languages %}-->
-<!--								  <div class="languages">-->
-<!--								    <ul class="languages">-->
-<!--								      {% for language in languages %}-->
-<!--								        <li>-->
-<!--								          <a href="/{{ language.code }}{{ request.path|cut:'/kk'|cut:'/ru' }}"-->
-<!--								          {% if language.code == LANGUAGE_CODE %} class="active"{% endif %}>-->
-<!--								            {{ language.name_local }}-->
-<!--								          </a>-->
-<!--								        </li>-->
-<!--								      {% endfor %}-->
-<!--								    </ul>-->
-<!--								  </div>-->
-<!--							</li>-->
+	{% include 'includes/navbar.html' %}
 
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- Main Header -->
-		<div class="sticky-header main-bar-wraper navbar-expand-lg">
-			<div class="main-bar clearfix ">
-				<div class="container clearfix">
-					<!-- Website Logo -->
-					<div class="logo-header mostion logo-dark">
-						<a href="{% url 'main:project_list' %}"><img src="{% static 'images/logo.png' %}" alt=""></a>
-					</div>
-					
-					<!-- Nav Toggle Button -->
-					<button class="navbar-toggler collapsed navicon justify-content-end" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-						<span></span>
-						<span></span>
-						<span></span>
-					</button>
-					{% if request.user.role == 2 %}
-					<!-- Extra Nav -->
-						{% if request.user.is_authenticated %}
-						<div class="extra-nav">
-							<ul class="navbar-nav">
-								<li class="nav-item dropdown">
-						          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						            {{request.user.first_name }}
-						          </a>
-						          <ul class="dropdown-menu">
-						            <li><a class="dropdown-item" href="#">{% trans "Менің профилім" %}</a></li>
-						            <li><a class="dropdown-item" href="{% url 'main:notification_list' id=request.user.id %}">{% trans "Хабарландыру" %}</a></li>
-						            <li><hr class="dropdown-divider"></li>
-						            <li><a class="dropdown-item" href="{% url 'account:logout' %}">{% trans "Шығу" %}</a></li>
-						          </ul>
-						        </li>
-							</ul>
-						</div>
-						{% else %}
-							<div class="extra-nav">
-								<div class="extra-cell">
-									<a href="{% url 'account:login' %}" class="badge badge-primary btn-login">
-											<i class="flaticon-logout me-2" ></i>{% trans "Кіру / Тіркелу" %}
-										</a>
-								</div>
-							</div>
-						{% endif %}
-						
-						<!-- Header Nav -->
-						<div class="header-nav navbar-collapse collapse justify-content-end" id="navbarNavDropdown">
-							<div class="logo-header logo-dark">
-								<a href="index.html"><img src="{% static 'images/logo.png' %}" alt=""></a>
-							</div>
+	<main class="flex-grow">
+		{% block content %}
+		{% endblock %}
+	</main>
 
-							<ul class="nav navbar-nav navbar navbar-left">	
-								
-								<li><a href="{% url 'organization:profile_view' %}">{% trans "Менің профилім" %}</a></li>
-							{% if request.user.organization %}
-								<li><a href="{% url 'organization:project_view' %}">{% trans "Менің жобаларым" %}</a></li>
-							{% endif %}
-							</ul>
-							<div class="header-bottom">
-								<a href="javascript:void(0);" class="btn btn-light btn-login btn-sm" data-bs-toggle="modal" data-bs-target="#modalLogin">
-									<i class="flaticon-logout me-3"></i>{% trans "Кіру / Тіркелу" %}
-								</a>
-								
-							</div>
-						</div>
-					{% else %}
-					{% if request.user.is_authenticated %}
-					<div class="extra-nav">
-						<ul class="navbar-nav">
-							<li class="nav-item dropdown">
-					          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-					            {{request.user.first_name }}
-					          </a>
-					          <ul class="dropdown-menu">
-					            <li><a class="dropdown-item" href="{% url 'volunteers:profile_view' %}">{% trans "Менің профилім" %}</a></li>
-					            	<li><a class="dropdown-item" href="{% url 'main:notification_list' id=request.user.id %}">{% trans "Хабарландыру" %}</a></li>
-					            <li><hr class="dropdown-divider"></li>
-					            <li><a class="dropdown-item" href="{% url 'account:logout' %}">{% trans "Шығу" %}</a></li>
-					          </ul>
-					        </li>
-						</ul>
-					</div>
-					{% else %}
-						<div class="extra-nav">
-							<div class="extra-cell">
-								<a href="{% url 'account:login' %}" class="badge badge-primary btn-login">
-										<i class="flaticon-logout me-2" ></i>{% trans "Кіру / Тіркелу" %}
-									</a>
-							</div>
-						</div>
-					{% endif %}
-						
-						<!-- Header Nav -->
-						<div class="header-nav navbar-collapse collapse justify-content-end" id="navbarNavDropdown">
-							<div class="logo-header logo-dark">
-								<a href="index.html"><img src="{% static 'images/logo.png' %}" alt=""></a>
-							</div>
-
-							<ul class="nav navbar-nav navbar navbar-left">	
-								
-								<li><a href="{% url 'main:main' %}">{% trans "Басты бет" %}</a></li>
-								<li><a href="{% url 'organization:projects' %}">Карта</a></li>
-								<li><a href="{% url 'main:project_list' %}">{% trans "Жобалар" %}</a></li>
-								<li><a href="{% url 'main:news_list' %}">{% trans "Жаңалықтар" %}</a></li>
-							</ul>
-
-							<div class="header-bottom">
-								<a href="{% url 'account:login' %}" class="btn btn-light btn-login btn-sm">
-									<i class="flaticon-logout me-3"></i>{% trans "Кіру / Тіркелу" %}
-								</a>
-								
-							</div>
-						
-						</div>
-					{% endif %}
-				</div>
-			</div>
-		</div>
-		<!-- Main Header End -->
-	</header>
-	<!-- Header End -->
-	
-	{% block content %}
-       
-    {% endblock %}
-	
-	<!-- Footer -->
-    <footer class="site-footer style-1 mb-3" id="footer">
-		<div class="footer-top">
-            <div class="container">
-				<div class="row">
-					<div class="col-xl-6 col-lg-6 col-md-12 wow fadeInUp" data-wow-delay="0.2s">
-						<div class="widget widget_about">
-							<div class="footer-logo logo-white">
-								<a href="{% url 'main:project_list' %}"><img src="{% static 'images/logo-white.png' %}" alt=""></a>
-							</div>
-							<p>{% trans "Бірге – біз үміт сыйлаймыз!" %}</p>
-						</div>
-					</div>
-					<div class="col-xl-6 col-lg-6 col-md-12 wow fadeInUp" data-wow-delay="0.8s">
-						<div class="widget widget_getintuch">
-							<h5 class="footer-title">{% trans "Бізбен байланысыңыз" %}</h5>
-							<ul>
-								<li>
-									<i class="fas fa-map-marker-alt"></i>
-									<span>Казахстан, Астана</span>
-								</li>
-								<li>
-									<i class="fa-solid fa-phone"></i>
-									<span>+7 777 999 99 99</span>
-								</li>
-								<li>
-									<i class="fa fa-envelope"></i> 
-									<span>support@example.com</span>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-            </div>
-			
-			
-			
-		</div>
-    </footer>
-    <!-- Footer End -->
-	
-	<!-- Authentication Modal -->
-	<div class="modal fade modal-wrapper auth-modal" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLogin" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<!-- Login Your Account -->
-			<div class="modal-content" id="universal-modal-content">
-				<h2 class="title">{% trans "Жүйеге кіру" %}</h2>
-				
-				<!-- <form action="index.html">
-					<div class="form-group">
-						<input type="email" class="form-control" placeholder="Email Address">
-					</div>
-					<div class="form-group">
-						<input type="password" class="form-control" placeholder="Password">
-						
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-outline-primary btn-block">Login</button>
-					</div>
-					<div class="sign-text">
-						<span>Don't have a Crowdfunding account? <a class="btn-link collapsed" data-bs-toggle="collapse" href="index.html#sign-up" role="button" aria-expanded="false" aria-controls="sign-up">Sign up</a></span>
-					</div>
-				</form> -->
-			</div>
-			
-			<!-- Reset Password -->
-			<div class="modal-content collapse reset-password" id="reset-password">
-				<h2 class="title">Құпия сөзді қалпына келтіру керек пе?</h2>
-				<form>
-					<div class="form-group password-icon-bx">
-						<i class="fa fa-lock"></i>
-						<p>Есептік жазбаңызбен байланыстырылған электрондық пошта мекенжайыңызды енгізіңіз, біз сізге құпия сөзді қалпына келтіру үшін сілтемені электрондық пошта арқылы жібереміз...</p>
-					</div>
-					<div class="form-group">
-						<input type="email" class="form-control" placeholder="Электрондық пошта мекенжайын енгізіңіз">
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-outline-primary btn-block">Қалпына келтіру сілтемесін жіберу</button>
-					</div>
-					<a data-bs-toggle="collapse" href="index.html#reset-password" class="sign-text" role="button" aria-expanded="false" aria-controls="reset-password">Артқа</a>
-				</form>
-			</div>
-			
-			<!-- Sign Up Your Account -->
-			<div class="modal-content collapse sign-up" id="sign-up">
-				<h2 class="title">Жүйеге тіркелу</h2>
-				<form action="index.html">
-					<div class="form-group">
-						<input type="email" class="form-control" placeholder="Электрондық пошта">
-					</div>
-					<div class="form-group">
-						<input type="password" class="form-control" placeholder="Құпия сөз">
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-outline-primary btn-block">Тіркелу</button>
-					</div>
-					
-					<div class="sign-text">
-						<span>Жүйеге тіркелмегенсіз бе? <a class="btn-link collapsed" data-bs-toggle="collapse" href="index.html#sign-up" role="button" aria-expanded="false" aria-controls="sign-up">Кіру</a></span>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<elevenlabs-convai agent-id="jA7uXFN83c2fD4nb4uFE"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
-
-</div>
-<!-- JAVASCRIPT FILES ========================================= -->
-<script src="{% static 'js/jquery.min.js' %}"></script><!-- JQUERY.MIN JS -->
-<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script><!-- BOOTSTRAP.MIN JS -->
-<script src="{% static 'js/dz.carousel.js' %}"></script><!-- OWL-CAROUSEL -->
+	{% include 'includes/footer.html' %}
 
 </body>
+
 </html>

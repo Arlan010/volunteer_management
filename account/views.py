@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateResponseMixin,View
 from .forms import LoginForm, UserRegistrationForm
 from django.contrib.auth import views as auth_views
+from django.contrib.auth import logout
 from django.urls import reverse_lazy
 
 
@@ -13,6 +14,11 @@ class LoginView(auth_views.LoginView):
             return reverse_lazy('main:main')
         elif self.request.user.role == 2:
             return reverse_lazy('organization:profile_view')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('main:main')
     
         
 class UserRegistrationView(TemplateResponseMixin, View):

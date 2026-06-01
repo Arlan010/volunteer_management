@@ -3,77 +3,59 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container">
-	<div class="row gutters-sm">
-	    <div class="col-md-4 mb-3">
-	      <div class="card border rounded-1">
-	        <div class="card-body">
-	          <div class="d-flex flex-column align-items-center text-center">
-	            <img src="{{ request.user.photo.url }}" alt="" class="rounded-circle" width="150" height="150" style="height: 150px;">
-	            <div class="mt-3">
-	              <h4>{{ request.user.first_name }}</h4>
-	            </div>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="col-md-8">
-	      <div class="card mb-3 border rounded-1">
-	        <div class="card-body">
-	          <div class="row">
-	            <div class="col-sm-3">
-	              <h6 class="mb-0">{% trans "Толық аты жөні" %}</h6>
-	            </div>
-	            <div class="col-sm-9 text-secondary">
-	             {{ request.user.first_name }} {{ request.user.last_name }}
-	            </div>
-	          </div>
-	          <hr>
-	          <div class="row">
-	            <div class="col-sm-3">
-	              <h6 class="mb-0">{% trans "Email address" %}</h6>
-	            </div>
-	            <div class="col-sm-9 text-secondary">
-	             {{ request.user.email }}
-	            </div>
-	          </div>
-	          <hr>
-	          <div class="row">
-	            <div class="col-sm-3">
-	              <h6 class="mb-0">{% trans "Рөлі" %}</h6>
-	            </div>
-	            <div class="col-sm-9 text-secondary">
-	              {% if request.user.role == 2 %}
-	              {% trans "Ұйым" %}
-	              {% elif request.user.role == 1 %}
-	              {% trans "Волонтер" %}
-	              {% endif %}
-	            </div>
-	          </div>
-	          <hr>
-	          <div class="row">
-	            <div class="col-sm-3">
-	              <h6 class="mb-0">{% trans "Ұйымның атауы" %}</h6>
-	            </div>
-	            <div class="col-sm-9 text-secondary">
-	              	{% if not request.user.organization %}
-						{% trans "Басу " %}<a href="{% url 'organization:organization_create_view' %}">{% trans "Ұйымдарды қосу" %}</a> {% trans "ұйымыңызды көрсету үшін." %}
-             		{% else %}
-             			{{ request.user.organization.title }}
-             		{% endif %}
-	            </div>
-	          </div>
-	          <hr>
-	          {% if request.user.organization %}
-	          <div class="row">
-	            <div class="col-sm-12">
-	              <a class="btn btn-info btn-sm" href="{% url 'organization:update_profile_view' pk=request.user.id %}">{% trans "Өңдеу" %}</a>
-	            </div>
-	          </div>
-	          {% endif %}
-	        </div>
-	      </div>
-	    </div>
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-5xl">
+		<div class="grid gap-6 md:grid-cols-[280px_1fr]">
+			<aside class="card border border-border/50 bg-card shadow-lg shadow-primary/5">
+				<div class="card-body items-center text-center">
+					{% if request.user.photo %}
+					<img src="{{ request.user.photo.url }}" alt="" class="h-36 w-36 rounded-full object-cover ring ring-primary/15">
+					{% else %}
+					<div class="flex h-36 w-36 items-center justify-center rounded-full bg-secondary text-4xl font-bold text-primary ring ring-primary/15">
+						{{ request.user.first_name|default:request.user.username|first|upper }}
+					</div>
+					{% endif %}
+					<h1 class="mt-3 text-2xl font-bold text-foreground">{{ request.user.first_name }}</h1>
+					<div class="badge badge-primary">
+						{% if request.user.role == 2 %}{% trans "Ұйым" %}{% elif request.user.role == 1 %}{% trans "Волонтер" %}{% endif %}
+					</div>
+				</div>
+			</aside>
+
+			<div class="card border border-border/50 bg-card shadow-lg shadow-primary/5">
+				<div class="card-body">
+					<h2 class="card-title">{% trans "Профиль туралы ақпарат" %}</h2>
+					<div class="divide-y divide-border/70">
+						<div class="grid gap-2 py-4 sm:grid-cols-3">
+							<p class="font-semibold text-foreground">{% trans "Толық аты жөні" %}</p>
+							<p class="text-muted-foreground sm:col-span-2">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+						</div>
+						<div class="grid gap-2 py-4 sm:grid-cols-3">
+							<p class="font-semibold text-foreground">{% trans "Email" %}</p>
+							<p class="text-muted-foreground sm:col-span-2">{{ request.user.email }}</p>
+						</div>
+						<div class="grid gap-2 py-4 sm:grid-cols-3">
+							<p class="font-semibold text-foreground">{% trans "Ұйымның атауы" %}</p>
+							<div class="text-muted-foreground sm:col-span-2">
+								{% if not request.user.organization %}
+								{% trans "Ұйымыңызды көрсету үшін" %}
+								<a href="{% url 'organization:organization_create_view' %}" class="link link-primary">{% trans "ұйымды қосыңыз" %}</a>.
+								{% else %}
+								{{ request.user.organization.title }}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					{% if request.user.organization %}
+					<div class="card-actions justify-end">
+						<a class="btn btn-primary btn-sm" href="{% url 'organization:update_profile_view' pk=request.user.id %}">
+							{% trans "Өңдеу" %}
+						</a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
 	</div>
-</div>	
+</section>
 {% endblock %}
