@@ -5,9 +5,30 @@
 {% block title %}{% trans "Жүйеге кіру" %}{% endblock %}
 
 {% block content %}
+<style>
+	.auth-card {
+		font-size: 1.0625rem;
+		font-weight: 500;
+	}
+
+	.auth-card h1 {
+		font-weight: 800;
+	}
+
+	.auth-card .label-text,
+	.auth-card input {
+		font-size: 1.0625rem !important;
+		font-weight: 500;
+	}
+
+	.auth-card .btn,
+	.auth-card .font-semibold {
+		font-weight: 700;
+	}
+</style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-md">
-		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
+		<div class="auth-card card border border-border/50 bg-card shadow-xl shadow-primary/5">
 			<div class="card-body">
 				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Жүйеге кіру" %}</h1>
 				{% if form.errors %}
