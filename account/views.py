@@ -1,7 +1,6 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic.base import TemplateResponseMixin,View
-from .forms import LoginForm, UserRegistrationForm
+from .forms import UserRegistrationForm
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
