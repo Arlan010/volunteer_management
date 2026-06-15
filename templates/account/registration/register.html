@@ -3,6 +3,15 @@
 {% load widget_tweaks %}
 
 {% block content %}
+<style>
+	.registration-role-select {
+		height: 3rem !important;
+		min-height: 3rem !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		line-height: 3rem !important;
+	}
+</style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-xl">
 		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
@@ -30,7 +39,7 @@
 							{% endif %}
 						</span>
 						{% if field.name == "role" %}
-							{{ field|add_class:"select select-bordered h-12 min-h-12 w-full py-0 leading-normal" }}
+							{{ field|add_class:"registration-role-select select select-bordered w-full" }}
 						{% elif field.name == "photo" %}
 							{{ field|add_class:"sr-only" }}
 							<label for="{{ field.id_for_label }}" class="flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-lg border border-border bg-background text-sm">

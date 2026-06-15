@@ -33,6 +33,7 @@ class UserRegistrationForm(forms.ModelForm):
         self.fields['role'].label = _('Рөлі')
         self.fields['role'].required = True
         self.fields['role'].choices = (
+            ('', ' '),
             (1, _('Ерікті')),
             (2, _('Ұйым')),
         )
