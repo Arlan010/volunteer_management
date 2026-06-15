@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'volunteer_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASE_URL = os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+DATABASE_URL = os.environ['DATABASE_URL']
 
 DATABASES = {
     'default': dj_database_url.config(

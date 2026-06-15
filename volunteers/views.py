@@ -1,10 +1,7 @@
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render
-from  django.views.generic import ListView,DetailView,CreateView
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.base import TemplateView,View
 from organization.models import Project,ResponseProject
-from account.models import CustomUser
 from account.mixins import VolunteerRequiredMixin
 
 class ProjectDetailView(TemplateView,View):

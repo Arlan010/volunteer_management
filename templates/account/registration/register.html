@@ -3,6 +3,15 @@
 {% load widget_tweaks %}
 
 {% block content %}
+<style>
+	.registration-role-select {
+		height: 3rem !important;
+		min-height: 3rem !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		line-height: 3rem !important;
+	}
+</style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-xl">
 		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
@@ -13,7 +22,7 @@
 				<form method="post" enctype="multipart/form-data" class="mt-1 space-y-4">
 					{% csrf_token %}
 					{% for field in registration_form %}
-					<label class="form-control">
+					<div class="form-control">
 						<span class="label-text mb-2">
 							{% if field.name == "username" %}
 								{% trans "Пайдаланушының аты" %}
@@ -22,18 +31,32 @@
 							{% elif field.name == "email" %}
 								{% trans "Электрондық пошта мекенжайы" %}
 							{% elif field.name == "role" %}
-								{% trans "Рөлі" %}
+								{% trans "Кім ретінде тіркелесіз?" %}
 							{% elif field.name == "photo" %}
-								{% trans "Фото" %}
+								{% trans "Профиль суреті" %}
 							{% else %}
 								{{ field.label }}
 							{% endif %}
 						</span>
-						{{ field|add_class:"input input-bordered w-full" }}
+						{% if field.name == "role" %}
+							{{ field|add_class:"registration-role-select select select-bordered w-full" }}
+						{% elif field.name == "photo" %}
+							{{ field|add_class:"sr-only" }}
+							<label for="{{ field.id_for_label }}" class="flex h-12 w-full cursor-pointer items-center overflow-hidden rounded-lg border border-border bg-background text-sm">
+								<span class="flex h-full shrink-0 items-center bg-secondary px-4 font-medium text-secondary-foreground">
+									{% trans "Фото таңдау" %}
+								</span>
+								<span class="min-w-0 flex-1 truncate px-4 text-muted-foreground" data-file-name>
+									{% trans "Файл таңдалмады" %}
+								</span>
+							</label>
+						{% else %}
+							{{ field|add_class:"input input-bordered h-12 min-h-12 w-full py-0 leading-normal" }}
+						{% endif %}
 						{% if field.errors %}
 						<span class="label-text-alt text-error">{{ field.errors|striptags }}</span>
 						{% endif %}
-					</label>
+					</div>
 					{% endfor %}
 					<button type="submit" class="btn btn-primary w-full">{% trans "Аккаунт құру" %}</button>
 				</form>
@@ -41,4 +64,14 @@
 		</div>
 	</div>
 </section>
+<script>
+	const photoInput = document.querySelector('input[type="file"][name="photo"]');
+	const fileName = document.querySelector('[data-file-name]');
+
+	if (photoInput && fileName) {
+		photoInput.addEventListener('change', () => {
+			fileName.textContent = photoInput.files.length ? photoInput.files[0].name : '{% trans "Файл таңдалмады" %}';
+		});
+	}
+</script>
 {% endblock %}

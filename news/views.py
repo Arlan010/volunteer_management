@@ -1,7 +1,5 @@
-from django.shortcuts import render
-from  django.views.generic import ListView,DetailView,CreateView
+from django.views.generic import ListView, DetailView
 from .models import News
-# Create your views here.
 
 class NewsDetailView(DetailView):
     model = News

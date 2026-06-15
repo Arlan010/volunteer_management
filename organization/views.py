@@ -4,7 +4,7 @@ from django.urls import reverse, reverse_lazy
 from .models import Organization,Project,ResponseProject
 from account.models import CustomUser
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from  django.views.generic import ListView,DetailView,CreateView
+from django.views.generic import ListView
 from django.views.generic.base import TemplateView,View
 from django.db.models import Sum
 from .forms import ProjectForm,OrganizationForm,UserEditForm
@@ -141,29 +141,10 @@ class UpdateProfileView(OrganizationRequiredMixin, TemplateView,View):
                 form = OrganizationForm(instance=request.user.organization)
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-
-
-@csrf_exempt
 def project_view_map(request):
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return JsonResponse({'error': 'Authentication required'}, status=401)
-        if not request.user.is_organization:
-            return JsonResponse({'error': 'Forbidden'}, status=403)
-        data = json.loads(request.body)
-        project = Project.objects.create(
-            title=data['title'],
-            description=data['description'],
-            latitude=data['latitude'],
-            longitude=data['longitude'],
-            start_date=data['start_date'],
-            status=data['status']
-        )
-        return JsonResponse({'id': project.id}, status=201)
-
-    elif request.method == 'GET':
-        projects = list(Project.objects.filter(status='current').values())
-        return render(request, 'main/projects_map.html', {'projects': projects})
+    projects = Project.objects.filter(
+        status='current',
+        latitude__isnull=False,
+        longitude__isnull=False,
+    )
+    return render(request, 'main/projects_map.html', {'projects': projects})

@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView,View
 from news.models import News
 from .forms import SupportForm
 from account.models import CustomUser
-from .models import Support, AnswerSupport
+from .models import Support
 from django.contrib import messages
 
 class MainView(TemplateView,View):
