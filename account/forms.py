@@ -32,6 +32,10 @@ class UserRegistrationForm(forms.ModelForm):
         self.fields['email'].label = _('Электрондық пошта мекенжайы')
         self.fields['role'].label = _('Рөлі')
         self.fields['role'].required = True
+        self.fields['role'].choices = (
+            (1, _('Ерікті')),
+            (2, _('Ұйым')),
+        )
         self.fields['photo'].label = _('Фото')
 
     def clean_password2(self):
