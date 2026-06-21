@@ -3,42 +3,125 @@
 {% load i18n %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+	.project-form-field {
+		height: 3rem !important;
+		min-height: 3rem !important;
+		line-height: 3rem !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
+	select.project-form-field {
+		display: flex !important;
+		align-items: center !important;
+	}
+
+	input[type="date"].project-form-field {
+		text-align: left !important;
+	}
+
+	input[type="date"].project-form-field::-webkit-datetime-edit {
+		height: 100%;
+		padding: 0;
+		line-height: 3rem;
+		text-align: left !important;
+	}
+
+	input[type="date"].project-form-field::-webkit-datetime-edit-fields-wrapper,
+	input[type="date"].project-form-field::-webkit-datetime-edit-text,
+	input[type="date"].project-form-field::-webkit-datetime-edit-day-field,
+	input[type="date"].project-form-field::-webkit-datetime-edit-month-field,
+	input[type="date"].project-form-field::-webkit-datetime-edit-year-field {
+		text-align: left !important;
+	}
+
+	input[type="date"].project-form-field::-webkit-calendar-picker-indicator {
+		margin-top: 0;
+	}
+
+	#project-location-map {
+		height: 360px;
+		min-height: 360px;
+		width: 100%;
+		z-index: 1;
+	}
+</style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-3xl">
 		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
 			<div class="card-body">
 				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Жобаны құру" %}</h1>
-				<form action="" method="POST" enctype="multipart/form-data" class="mt-6 space-y-5">
+				<form action="" method="POST" enctype="multipart/form-data" class="mt-6 space-y-5" data-project-form>
 					{% csrf_token %}
+					{% if form.non_field_errors %}
+					<div class="rounded-xl border border-error/30 bg-error/10 p-4 text-error">
+						{{ form.non_field_errors|striptags }}
+					</div>
+					{% endif %}
+
 					<div class="grid gap-4 md:grid-cols-2">
 						<label class="form-control">
 							<span class="label-text">{% trans "Тақырыбы" %}</span>
 							{{ form.title|add_class:"input input-bordered w-full" }}
-						</label>
-						<label class="form-control">
-							<span class="label-text">{% trans "Мекен жайы" %}</span>
-							{{ form.location|add_class:"input input-bordered w-full" }}
+							{% if form.title.errors %}<span class="label-text-alt mt-2 text-error">{{ form.title.errors|striptags }}</span>{% endif %}
 						</label>
 						<label class="form-control">
 							<span class="label-text">{% trans "Санат" %}</span>
-							{{ form.category|add_class:"select select-bordered w-full" }}
+							{{ form.category|add_class:"project-form-field select select-bordered w-full" }}
+							{% if form.category.errors %}<span class="label-text-alt mt-2 text-error">{{ form.category.errors|striptags }}</span>{% endif %}
 						</label>
 						<label class="form-control">
 							<span class="label-text">{% trans "Жобаның бітетін уақыты" %}</span>
-							{{ form.end_date|add_class:"input input-bordered w-full" }}
+							{{ form.end_date|add_class:"project-form-field input input-bordered w-full" }}
+							{% if form.end_date.errors %}<span class="label-text-alt mt-2 text-error">{{ form.end_date.errors|striptags }}</span>{% endif %}
 						</label>
 						<label class="form-control">
 							<span class="label-text">{% trans "Волонтерлер саны" %}</span>
 							{{ form.number_of_volunteers|add_class:"input input-bordered w-full" }}
-						</label>
-						<label class="form-control">
-							<span class="label-text">{% trans "Фото" %}</span>
-							{{ form.photo|add_class:"file-input file-input-bordered w-full" }}
+							{% if form.number_of_volunteers.errors %}<span class="label-text-alt mt-2 text-error">{{ form.number_of_volunteers.errors|striptags }}</span>{% endif %}
 						</label>
 					</div>
+
+					<div class="form-control">
+						<span class="label-text">{% trans "Мекен жайы" %}</span>
+						<div class="flex flex-col gap-2 sm:flex-row">
+							{{ form.location|add_class:"input input-bordered w-full" }}
+							<button type="button" class="btn btn-secondary shrink-0" data-address-search>
+								{% trans "Мекенжайды табу" %}
+							</button>
+						</div>
+						{% if form.location.errors %}<span class="label-text-alt mt-2 text-error">{{ form.location.errors|striptags }}</span>{% endif %}
+					</div>
+
+					<div class="form-control">
+						<span class="label-text">{% trans "Картадағы орны" %}</span>
+						<div class="overflow-hidden rounded-xl border border-border">
+							<div id="project-location-map"></div>
+						</div>
+						<div class="mt-2 flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+							<span data-map-status>{% trans "Мекенжайды іздеңіз немесе картадан орынды басыңыз." %}</span>
+							<button type="button" class="btn btn-outline btn-sm" data-clear-location>{% trans "Орынды тазалау" %}</button>
+						</div>
+						{{ form.latitude|add_class:"hidden" }}
+						{{ form.longitude|add_class:"hidden" }}
+						{% if form.latitude.errors %}<span class="label-text-alt mt-2 text-error">{{ form.latitude.errors|striptags }}</span>{% endif %}
+						{% if form.longitude.errors %}<span class="label-text-alt mt-2 text-error">{{ form.longitude.errors|striptags }}</span>{% endif %}
+					</div>
+
+					<label class="form-control">
+						<span class="label-text">{% trans "Фото" %}</span>
+						{{ form.photo|add_class:"file-input file-input-bordered w-full" }}
+						{% if form.photo.errors %}<span class="label-text-alt mt-2 text-error">{{ form.photo.errors|striptags }}</span>{% endif %}
+					</label>
+
 					<label class="form-control">
 						<span class="label-text">{% trans "Жобаның сипаттамасы" %}</span>
 						{{ form.comment|add_class:"textarea textarea-bordered min-h-36 w-full" }}
+						{% if form.comment.errors %}<span class="label-text-alt mt-2 text-error">{{ form.comment.errors|striptags }}</span>{% endif %}
 					</label>
 					<input type="submit" value='{% trans "Сақтау" %}' class="btn btn-primary w-full">
 				</form>
@@ -46,4 +129,166 @@
 		</div>
 	</div>
 </section>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const astana = [51.169392, 71.449074];
+		const mapElement = document.getElementById('project-location-map');
+		const addressInput = document.getElementById('id_location');
+		const latitudeInput = document.getElementById('id_latitude');
+		const longitudeInput = document.getElementById('id_longitude');
+		const searchButton = document.querySelector('[data-address-search]');
+		const clearButton = document.querySelector('[data-clear-location]');
+		const statusElement = document.querySelector('[data-map-status]');
+		const form = document.querySelector('[data-project-form]');
+		let marker = null;
+
+		function setStatus(message) {
+			if (statusElement) statusElement.textContent = message;
+		}
+
+		function formatCoordinate(value) {
+			return Number(value).toFixed(6);
+		}
+
+		function setLocation(latitude, longitude, message) {
+			latitudeInput.value = formatCoordinate(latitude);
+			longitudeInput.value = formatCoordinate(longitude);
+
+			if (marker) {
+				marker.setLatLng([latitude, longitude]);
+			} else {
+				marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+				marker.on('dragend', function () {
+					const position = marker.getLatLng();
+					setLocation(position.lat, position.lng, 'Орын картадан таңдалды.');
+					reverseGeocode(position.lat, position.lng, false);
+				});
+			}
+
+			map.setView([latitude, longitude], 15);
+			setStatus(message || 'Орын картадан таңдалды.');
+		}
+
+		function clearLocation() {
+			latitudeInput.value = '';
+			longitudeInput.value = '';
+			if (marker) {
+				map.removeLayer(marker);
+				marker = null;
+			}
+			setStatus('Мекенжайды іздеңіз немесе картадан орынды басыңыз.');
+		}
+
+		async function searchAddress() {
+			const query = addressInput.value.trim();
+			if (!query) {
+				setStatus('Алдымен мекенжайды енгізіңіз.');
+				addressInput.focus();
+				return;
+			}
+
+			setStatus('Мекенжай ізделіп жатыр...');
+
+			try {
+				const params = new URLSearchParams({
+					format: 'json',
+					limit: '1',
+					countrycodes: 'kz',
+					'accept-language': 'kk',
+					q: query,
+				});
+				const response = await fetch('https://nominatim.openstreetmap.org/search?' + params.toString());
+				const results = await response.json();
+
+				if (!results.length) {
+					setStatus('Мекенжай табылмады. Нақтырақ жазып көріңіз немесе картадан басыңыз.');
+					return;
+				}
+
+				const result = results[0];
+				const latitude = Number(result.lat);
+				const longitude = Number(result.lon);
+				addressInput.value = result.display_name || query;
+				setLocation(latitude, longitude, 'Мекенжай табылды.');
+			} catch (error) {
+				setStatus('Мекенжайды іздеу мүмкін болмады. Картадан орынды қолмен таңдаңыз.');
+			}
+		}
+
+		async function reverseGeocode(latitude, longitude, alwaysReplaceAddress) {
+			try {
+				const params = new URLSearchParams({
+					format: 'jsonv2',
+					'accept-language': 'kk',
+					lat: latitude,
+					lon: longitude,
+				});
+				const response = await fetch('https://nominatim.openstreetmap.org/reverse?' + params.toString());
+				const result = await response.json();
+
+				if (result.display_name && (alwaysReplaceAddress || !addressInput.value.trim())) {
+					addressInput.value = result.display_name;
+				}
+			} catch (error) {
+				setStatus('Орын таңдалды, бірақ мекенжайды автоматты анықтау мүмкін болмады.');
+			}
+		}
+
+		if (!mapElement || typeof L === 'undefined') {
+			setStatus('Картаны жүктеу мүмкін болмады. Интернет байланысын тексеріңіз.');
+			return;
+		}
+
+		const existingLatitude = Number(latitudeInput.value);
+		const existingLongitude = Number(longitudeInput.value);
+		const hasExistingLocation = latitudeInput.value.trim() !== ''
+			&& longitudeInput.value.trim() !== ''
+			&& Number.isFinite(existingLatitude)
+			&& Number.isFinite(existingLongitude)
+			&& existingLatitude >= -90
+			&& existingLatitude <= 90
+			&& existingLongitude >= -180
+			&& existingLongitude <= 180;
+		const map = L.map(mapElement).setView(hasExistingLocation ? [existingLatitude, existingLongitude] : astana, hasExistingLocation ? 15 : 12);
+
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; OpenStreetMap contributors'
+		}).addTo(map);
+
+		if (hasExistingLocation) {
+			setLocation(existingLatitude, existingLongitude, 'Орын таңдалған.');
+		}
+
+		map.on('click', function (event) {
+			setLocation(event.latlng.lat, event.latlng.lng, 'Орын картадан таңдалды.');
+			reverseGeocode(event.latlng.lat, event.latlng.lng, true);
+		});
+
+		if (searchButton) searchButton.addEventListener('click', searchAddress);
+		if (clearButton) clearButton.addEventListener('click', clearLocation);
+		if (addressInput) {
+			addressInput.addEventListener('keydown', function (event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					searchAddress();
+				}
+			});
+		}
+		if (form) {
+			form.addEventListener('submit', function (event) {
+				if (!latitudeInput.value || !longitudeInput.value) {
+					event.preventDefault();
+					setStatus('Жобаны сақтау үшін мекенжайды табыңыз немесе картадан орынды таңдаңыз.');
+					mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				}
+			});
+		}
+
+		window.setTimeout(function () {
+			map.invalidateSize();
+		}, 150);
+	});
+</script>
 {% endblock %}

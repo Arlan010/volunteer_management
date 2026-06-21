@@ -1,0 +1,296 @@
+{% load i18n %}
+
+<style>
+	.response-table th {
+		font-size: 0.86rem !important;
+		font-weight: 500 !important;
+		line-height: 1.2rem !important;
+		white-space: normal !important;
+	}
+
+	.response-table td,
+	.response-table th {
+		padding-left: 0.45rem !important;
+		padding-right: 0.45rem !important;
+	}
+
+	.response-table-name {
+		font-size: 1.06rem !important;
+		line-height: 1.35rem !important;
+		white-space: normal !important;
+		overflow-wrap: anywhere;
+	}
+
+	.response-table .select-sm {
+		min-height: 2.2rem !important;
+		height: 2.2rem !important;
+		font-size: 0.9rem !important;
+		padding-left: 0.6rem !important;
+		padding-right: 1.75rem !important;
+	}
+
+	.response-table .btn-sm {
+		min-height: 2.2rem !important;
+		padding: 0.4rem 0.65rem !important;
+		font-size: 0.9rem !important;
+		line-height: 1.2rem !important;
+	}
+
+	.response-table select:disabled {
+		cursor: not-allowed;
+		opacity: 0.75;
+	}
+
+	.response-search-input {
+		font-size: 1rem !important;
+		line-height: 1.35rem !important;
+	}
+</style>
+
+<section id="responses" class="mt-8 rounded-2xl border border-border/50 bg-card p-5 shadow-xl shadow-primary/5" data-response-list>
+	<div class="mb-4 flex items-center justify-between gap-3">
+		<h2 class="text-2xl font-bold text-foreground">{% trans "Жобаға қосылған еріктілер тізімі" %}</h2>
+		<div class="badge badge-secondary">{{ response_projects|length }} {% trans "ерікті" %}</div>
+	</div>
+
+	{% if response_projects %}
+	<div class="mb-4 max-w-md">
+		<label class="input input-bordered flex h-12 items-center gap-2 rounded-xl bg-background">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<circle cx="11" cy="11" r="8"></circle>
+				<path d="m21 21-4.3-4.3"></path>
+			</svg>
+			<input type="search" class="response-search-input min-w-0 grow bg-transparent outline-none" placeholder="{% trans 'Еріктіні іздеу' %}" data-response-search>
+		</label>
+	</div>
+	<div class="overflow-x-hidden">
+		<table class="response-table table table-zebra w-full table-fixed text-sm">
+			<colgroup>
+				<col class="w-[28%]">
+				<col class="w-[24%]">
+				<col class="w-[15%]">
+				<col class="w-[14%]">
+				<col class="w-[8%]">
+				<col class="w-[11%]">
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="px-2 text-sm font-medium leading-tight">{% trans "Ерікті" %}</th>
+					<th class="px-2 text-sm font-medium leading-tight">{% trans "Байланыс" %}</th>
+					<th class="px-2 text-sm font-medium leading-tight">{% trans "Өтінім берілген күні" %}</th>
+					<th class="px-2 text-sm font-medium leading-tight">{% trans "Статус" %}</th>
+					<th class="px-2 text-xs font-medium leading-tight sm:text-sm">{% trans "Рейтинг" %}</th>
+					<th class="px-2 text-right text-sm font-medium leading-tight">{% trans "Әрекет" %}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for response_project in response_projects %}
+				<tr data-response-row data-response-save-url="{% url 'organization:project_detail_view' pk=projects_details.id %}" data-response-csrf="{{ csrf_token }}" data-volunteer-id="{{ response_project.user.id }}">
+					<td class="px-2">
+						<div class="flex items-center gap-3">
+							{% if response_project.user.photo %}
+							<img src="{{ response_project.user.photo.url }}" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover">
+							{% else %}
+							<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary font-bold text-primary">
+								{{ response_project.user.first_name|default:response_project.user.username|first|upper }}
+							</div>
+							{% endif %}
+							<div class="min-w-0">
+								<p class="response-table-name font-bold text-foreground">{{ response_project.user.first_name|default:response_project.user.username }} {{ response_project.user.last_name }}</p>
+								{% if response_project.attendance_status == "attended" %}
+								<span class="inline-flex items-center rounded-full bg-success/15 px-2 py-0.5 text-xs font-semibold text-success" data-response-status-badge>{% trans "Қатысты" %}</span>
+								{% elif response_project.attendance_status == "missed" %}
+								<span class="inline-flex items-center rounded-full bg-error/15 px-2 py-0.5 text-xs font-semibold text-error" data-response-status-badge>{% trans "Қатыспады" %}</span>
+								{% else %}
+								<span class="inline-flex items-center rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground" data-response-status-badge>{% trans "Күтілуде" %}</span>
+								{% endif %}
+							</div>
+						</div>
+					</td>
+					<td class="px-2">
+						<div class="grid min-w-0 gap-1 text-sm">
+							{% if response_project.user.phone %}
+							<a href="tel:{{ response_project.user.phone }}" class="block truncate text-primary hover:underline">{{ response_project.user.phone }}</a>
+							{% endif %}
+							{% if response_project.user.email %}
+							<a href="mailto:{{ response_project.user.email }}" class="block truncate text-muted-foreground hover:text-primary hover:underline">{{ response_project.user.email }}</a>
+							{% endif %}
+							{% if not response_project.user.phone and not response_project.user.email %}
+							<span class="text-muted-foreground">-</span>
+							{% endif %}
+						</div>
+					</td>
+					<td class="whitespace-nowrap px-2 text-sm text-muted-foreground">{{ response_project.created_date|date:"d.m.Y H:i" }}</td>
+						<td class="px-2">
+							<select name="attendance_status" class="select select-bordered select-sm w-full" data-response-control {% if response_project.attendance_status != "pending" %}disabled{% endif %}>
+								<option value="pending" {% if response_project.attendance_status == "pending" %}selected{% endif %}>{% trans "Күтілуде" %}</option>
+								<option value="attended" {% if response_project.attendance_status == "attended" %}selected{% endif %}>{% trans "Қатысты" %}</option>
+								<option value="missed" {% if response_project.attendance_status == "missed" %}selected{% endif %}>{% trans "Қатыспады" %}</option>
+							</select>
+						</td>
+						<td class="px-2">
+							<select name="rating" class="select select-bordered select-sm w-full" data-response-control {% if response_project.attendance_status != "pending" %}disabled{% endif %}>
+								<option value="0" {% if response_project.rating <= 0 %}selected{% endif %}>0</option>
+								<option value="1" {% if response_project.rating == 1 %}selected{% endif %}>1</option>
+								<option value="2" {% if response_project.rating == 2 %}selected{% endif %}>2</option>
+								<option value="3" {% if response_project.rating == 3 %}selected{% endif %}>3</option>
+								<option value="4" {% if response_project.rating == 4 %}selected{% endif %}>4</option>
+								<option value="5" {% if response_project.rating == 5 %}selected{% endif %}>5</option>
+							</select>
+						</td>
+						<td class="px-2 text-right">
+							{% if response_project.attendance_status == "pending" %}
+							<button type="button" class="btn btn-primary btn-sm px-3" data-response-save data-edit-label="{% trans 'Өңдеу' %}">{% trans "Сақтау" %}</button>
+							{% else %}
+							<button type="button" class="btn btn-outline btn-sm px-3" data-response-edit data-save-label="{% trans 'Сақтау' %}">{% trans "Өңдеу" %}</button>
+							{% endif %}
+						</td>
+				</tr>
+				{% endfor %}
+				<tr class="hidden" data-response-empty>
+					<td colspan="6" class="py-6 text-center text-sm text-muted-foreground">
+						{% trans "Мұндай ерікті табылмады." %}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	{% else %}
+	<div class="rounded-xl border border-dashed border-border bg-secondary/50 p-6 text-center text-muted-foreground">
+		{% trans "Әзірге еріктілер қосылған жоқ." %}
+	</div>
+	{% endif %}
+</section>
+
+<script>
+	(function () {
+		const lists = document.querySelectorAll('[data-response-list]');
+
+		lists.forEach((list) => {
+			const searchInput = list.querySelector('[data-response-search]');
+			const rows = Array.from(list.querySelectorAll('[data-response-row]'));
+			const emptyRow = list.querySelector('[data-response-empty]');
+
+			if (!searchInput || !rows.length) {
+				return;
+			}
+
+			const unlockRow = (row, button) => {
+				row.querySelectorAll('[data-response-control]').forEach((control) => {
+					control.disabled = false;
+				});
+
+				button.textContent = button.dataset.saveLabel || 'Сақтау';
+				button.classList.remove('btn-outline');
+				button.classList.add('btn-primary');
+				button.removeAttribute('data-response-edit');
+				button.setAttribute('data-response-save', '');
+			};
+
+			const lockRow = (row, button) => {
+				row.querySelectorAll('[data-response-control]').forEach((control) => {
+					control.disabled = true;
+				});
+
+				button.disabled = false;
+				button.textContent = button.dataset.editLabel || 'Өңдеу';
+				button.classList.remove('btn-primary');
+				button.classList.add('btn-outline');
+				button.removeAttribute('data-response-save');
+				button.setAttribute('data-response-edit', '');
+			};
+
+			const updateStatusBadge = (row) => {
+				const badge = row.querySelector('[data-response-status-badge]');
+				const statusSelect = row.querySelector('select[name="attendance_status"]');
+
+				if (!badge || !statusSelect) {
+					return;
+				}
+
+				badge.textContent = statusSelect.options[statusSelect.selectedIndex].text;
+				badge.className = 'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold';
+
+				if (statusSelect.value === 'attended') {
+					badge.classList.add('bg-success/15', 'text-success');
+				} else if (statusSelect.value === 'missed') {
+					badge.classList.add('bg-error/15', 'text-error');
+				} else {
+					badge.classList.add('bg-secondary', 'text-secondary-foreground');
+				}
+			};
+
+			rows.forEach((row) => {
+				row.addEventListener('click', async (event) => {
+					const button = event.target.closest('[data-response-edit], [data-response-save]');
+
+					if (!button) {
+						return;
+					}
+
+					event.preventDefault();
+
+					if (button.hasAttribute('data-response-edit')) {
+						unlockRow(row, button);
+						return;
+					}
+
+					const formData = new FormData();
+					const statusSelect = row.querySelector('select[name="attendance_status"]');
+					const ratingSelect = row.querySelector('select[name="rating"]');
+
+					formData.append('volunteer_id', row.dataset.volunteerId);
+					formData.append('attendance_status', statusSelect.value);
+					formData.append('rating', ratingSelect.value);
+
+					button.disabled = true;
+
+					try {
+						const response = await fetch(row.dataset.responseSaveUrl, {
+							method: 'POST',
+							headers: {
+								'X-CSRFToken': row.dataset.responseCsrf,
+								'X-Requested-With': 'XMLHttpRequest',
+							},
+							body: formData,
+						});
+
+						if (!response.ok) {
+							throw new Error('Save failed');
+						}
+
+						const result = await response.json();
+						if (!result.success) {
+							throw new Error('Save failed');
+						}
+
+						statusSelect.value = result.attendance_status;
+						ratingSelect.value = result.rating;
+						updateStatusBadge(row);
+						lockRow(row, button);
+					} catch (error) {
+						button.disabled = false;
+						alert('Сақтау кезінде қате шықты.');
+					}
+				});
+			});
+
+			searchInput.addEventListener('input', () => {
+				const query = searchInput.value.trim().toLowerCase();
+				let visibleCount = 0;
+
+				rows.forEach((row) => {
+					const isMatch = row.textContent.toLowerCase().includes(query);
+					row.classList.toggle('hidden', !isMatch);
+					if (isMatch) {
+						visibleCount += 1;
+					}
+				});
+
+				if (emptyRow) {
+					emptyRow.classList.toggle('hidden', visibleCount > 0);
+				}
+			});
+		});
+	})();
+</script>

@@ -6,4 +6,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.UserRegistrationView.as_view(template_name = "account/registration/register.html"), name='UserRegistrationView'),
     path('login/', views.LoginView.as_view(template_name = "account/registration/login.html"), name='login'),
+    path('notifications/', views.NotificationListView.as_view(), name='notifications'),
 ]

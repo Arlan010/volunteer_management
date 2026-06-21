@@ -14,20 +14,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.shortcuts import redirect
+from django.urls import path,include,re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.conf.urls.i18n import i18n_patterns
 
-urlpatterns = i18n_patterns(
-    path('', include('main.urls')),
-    path('admin/', admin.site.urls),
-    path('account/', include('account.urls')),
-    path('organization/', include('organization.urls')),
-    path('volunteers/', include('volunteers.urls')),
-    path('news/', include('news.urls')),
-)
-urlpatterns += [
+
+def redirect_to_kz(request, path=""):
+    path = path or ""
+    return redirect(f"/kz/{path}", permanent=False)
+
+
+urlpatterns = [
+    path('', redirect_to_kz),
+    re_path(r'^ru(?:/(?P<path>.*))?$', redirect_to_kz),
+    path('kz/', include('main.urls')),
+    path('kz/admin/', admin.site.urls),
+    path('kz/account/', include('account.urls')),
+    path('kz/organization/', include('organization.urls')),
+    path('kz/volunteers/', include('volunteers.urls')),
+    path('kz/news/', include('news.urls')),
     path('rosetta/', include('rosetta.urls')),
 ]
 if settings.DEBUG:

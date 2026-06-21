@@ -6,7 +6,13 @@
 <article class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-4xl">
 		<div class="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl shadow-primary/5">
+			{% if news.photo %}
 			<img src="{{ news.photo.url }}" alt="{{ news.title }}" class="h-80 w-full object-cover">
+			{% else %}
+			<div class="flex h-80 w-full items-center justify-center bg-secondary text-5xl font-bold text-secondary-foreground">
+				{{ news.title|first|upper }}
+			</div>
+			{% endif %}
 			<div class="p-6 sm:p-8">
 				<div class="badge badge-ghost mb-4">{{ news.created_date }}</div>
 				<h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{{ news.title }}</h1>

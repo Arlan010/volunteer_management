@@ -1,8 +1,9 @@
 from django.core.exceptions import PermissionDenied
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.urls import reverse, reverse_lazy
 from .models import Organization,Project,ResponseProject
-from account.models import CustomUser
+from account.models import CustomUser, Notification
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import ListView
 from django.views.generic.base import TemplateView,View
@@ -70,8 +71,8 @@ class ProjectDetailView(OrganizationRequiredMixin, TemplateView):
     template_name = 'organization/projects_detail.html'
 
     def get(self,request,pk):
-        projects_details = get_object_or_404(Project, id=pk, organization=request.user.organization)
-        response_projects = ResponseProject.objects.filter(project=projects_details).select_related('user')
+        projects_details = get_object_or_404(Project.objects.select_related('organization'), id=pk, organization=request.user.organization)
+        response_projects = ResponseProject.objects.filter(project=projects_details).select_related('user').order_by('-created_date')
         return self.render_to_response({'projects_details':projects_details,'response_projects':response_projects})
 
     def post(self, request,pk):
@@ -84,14 +85,37 @@ class ProjectDetailView(OrganizationRequiredMixin, TemplateView):
                 user_id=volunteer_id,
             )
 
-            if request.POST.get('action') == 'missed':
-                response_project.rating = -2
-            else:
-                rating = request.POST.get("rating") or 0
-                response_project.rating = int(rating)
+            attendance_status = request.POST.get('attendance_status') or ResponseProject.ATTENDANCE_PENDING
+            if attendance_status not in dict(ResponseProject.ATTENDANCE_CHOICES):
+                attendance_status = ResponseProject.ATTENDANCE_PENDING
 
-            response_project.save(update_fields=['rating'])
+            if attendance_status == ResponseProject.ATTENDANCE_MISSED:
+                response_project.rating = -2
+            elif attendance_status == ResponseProject.ATTENDANCE_ATTENDED:
+                try:
+                    rating = int(request.POST.get("rating") or 0)
+                except (TypeError, ValueError):
+                    rating = 0
+                response_project.rating = max(0, min(5, rating))
+            else:
+                response_project.rating = 0
+
+            response_project.attendance_status = attendance_status
+            response_project.save(update_fields=['rating', 'attendance_status'])
             recalculate_user_rating(volunteer_id)
+            status_label = dict(ResponseProject.ATTENDANCE_CHOICES).get(attendance_status, attendance_status)
+            Notification.objects.create(
+                recipient=response_project.user,
+                title='Жоба бойынша жаңарту',
+                message=f'"{projects_details.title}" жобасында статусыңыз жаңартылды: {status_label}. Рейтинг: {max(response_project.rating, 0)}.',
+                url=reverse('volunteers:project_detail_view', kwargs={'pk': projects_details.id}),
+            )
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'attendance_status': response_project.attendance_status,
+                    'rating': max(response_project.rating, 0),
+                })
             return redirect('organization:project_detail_view', pk=projects_details.id)
             
 
@@ -128,7 +152,8 @@ class UpdateProfileView(OrganizationRequiredMixin, TemplateView,View):
             raise PermissionDenied("Өзге пайдаланушының профилін өңдеуге рұқсат жоқ.")
         if request.method == 'POST':
             user_form = UserEditForm(instance=request.user,
-                                 data=request.POST)
+                                 data=request.POST,
+                                 files=request.FILES)
             form = OrganizationForm(
                                     instance=request.user.organization,
                                     data=request.POST)
@@ -136,9 +161,7 @@ class UpdateProfileView(OrganizationRequiredMixin, TemplateView,View):
                 user_form.save()
                 form.save()
                 return redirect('organization:profile_view')
-            else:
-                user_form = UserEditForm(instance=request.user)
-                form = OrganizationForm(instance=request.user.organization)
+            return self.render_to_response({'form': form, 'user_form': user_form})
 
 
 def project_view_map(request):
@@ -147,4 +170,15 @@ def project_view_map(request):
         latitude__isnull=False,
         longitude__isnull=False,
     )
-    return render(request, 'main/projects_map.html', {'projects': projects})
+    project_markers = [
+        {
+            'title': project.title,
+            'location': project.location,
+            'comment': project.comment,
+            'latitude': project.latitude,
+            'longitude': project.longitude,
+            'start_date': project.start_date.strftime('%d.%m.%Y') if project.start_date else '',
+        }
+        for project in projects
+    ]
+    return render(request, 'main/projects_map.html', {'project_markers': project_markers})

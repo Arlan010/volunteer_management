@@ -7,14 +7,20 @@
 	<div class="mx-auto max-w-6xl">
 		<div class="grid gap-8 lg:grid-cols-[1fr_340px]">
 			<article class="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl shadow-primary/5">
+				{% if projects_details.photo %}
 				<img src="{{ projects_details.photo.url }}" alt="{{ projects_details.title }}" class="h-80 w-full object-cover">
+				{% else %}
+				<div class="flex h-80 w-full items-center justify-center bg-secondary text-5xl font-bold text-secondary-foreground">
+					{{ projects_details.title|first|upper }}
+				</div>
+				{% endif %}
 				<div class="p-6 sm:p-8">
 					<div class="badge badge-outline border-accent text-accent">{% trans "Жобаның сипаттамасы" %}</div>
 					<h1 class="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{{ projects_details.title }}</h1>
 					<div class="mt-5 flex flex-wrap gap-3 text-base text-muted-foreground">
-						<span class="badge badge-ghost">📅 {{ projects_details.created_date }} - {{ projects_details.end_date }}</span>
-						<span class="badge badge-ghost">📍 {{ projects_details.location }}</span>
-						<span class="badge badge-ghost">👥 {{ projects_details.number_of_volunteers }} {% trans "бекітілген волонтер" %}</span>
+						<span class="badge badge-ghost">{{ projects_details.created_date }} - {{ projects_details.end_date }}</span>
+						<span class="badge badge-ghost">{{ projects_details.location }}</span>
+						<span class="badge badge-ghost">{{ projects_details.number_of_volunteers }} {% trans "бекітілген волонтер" %}</span>
 					</div>
 					<div class="mt-8">
 						<h2 class="text-xl font-semibold text-foreground">{% trans "Жоба туралы толығырақ" %}</h2>
@@ -41,50 +47,7 @@
 			</aside>
 		</div>
 
-		<div id="responses" class="mt-8 rounded-2xl border border-border/50 bg-card p-6 shadow-xl shadow-primary/5">
-			<h2 class="mb-5 text-2xl font-bold text-foreground">{% trans "Волонтерлер тізімі" %}</h2>
-			<div class="overflow-x-auto">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>{% trans "Аты жөні" %}</th>
-							<th>{% trans "Рөлі" %}</th>
-							<th>{% trans "Рейтинг" %}</th>
-							<th class="text-right">{% trans "Әрекет" %}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for response_project in response_projects %}
-						<tr>
-							<td>{{ response_project.user.first_name }} {{ response_project.user.last_name }}</td>
-							<td>{% if response_project.user.is_volunteer %}{% trans "Волонтер" %}{% endif %}</td>
-							<td>{{ response_project.rating }}</td>
-							<td>
-								<form method="post" action="" class="flex flex-wrap items-center justify-end gap-2">
-									{% csrf_token %}
-									<input type="hidden" name="volunteer_id" value="{{ response_project.user.id }}">
-									<select name="rating" class="select select-bordered select-sm w-20">
-										<option value="0" {% if response_project.rating == 0 %}selected{% endif %}>0</option>
-										<option value="1" {% if response_project.rating == 1 %}selected{% endif %}>1</option>
-										<option value="2" {% if response_project.rating == 2 %}selected{% endif %}>2</option>
-										<option value="3" {% if response_project.rating == 3 %}selected{% endif %}>3</option>
-										<option value="4" {% if response_project.rating == 4 %}selected{% endif %}>4</option>
-										<option value="5" {% if response_project.rating == 5 %}selected{% endif %}>5</option>
-									</select>
-									<button type="submit" class="btn btn-secondary btn-sm" name="action" value="rate">{% trans "Рейтинг қою" %}</button>
-									<button type="submit" name="action" value="missed" class="btn btn-outline btn-sm">{% trans "Волонтер келмеді" %} (-2)</button>
-								</form>
-							</td>
-						</tr>
-						{% empty %}
-						<tr>
-							<td colspan="4" class="text-center text-muted-foreground">{% trans "Волонтерлер әлі жоқ." %}</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		</div>
+		{% include "organization/includes/response_compact_table.html" %}
 	</div>
 </section>
 {% endblock %}

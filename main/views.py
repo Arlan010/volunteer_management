@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView,View
 from news.models import News
 from .forms import SupportForm
 from account.models import CustomUser
-from .models import Support
+from .models import HomeStatistic, Support
 from django.contrib import messages
 
 class MainView(TemplateView,View):
@@ -14,10 +14,11 @@ class MainView(TemplateView,View):
         projects = Project.objects.all()[:4]
         categorys = Category.objects.all()
         my_news = News.objects.all()[:3]
+        home_statistic = HomeStatistic.objects.first()
         if category_id:
             print(category_id)
             projects = Project.objects.filter(category=category_id)
-        return self.render_to_response({'projects':projects,'categorys':categorys,'my_news':my_news,'form':form})
+        return self.render_to_response({'projects':projects,'categorys':categorys,'my_news':my_news,'form':form,'home_statistic':home_statistic})
 
     def post(self, request,category_id = None):
         user = CustomUser.objects.get(id = request.user.id)
@@ -38,7 +39,8 @@ class MainCategory(TemplateView,View):
         projects = Project.objects.filter(category=category_id)
         categorys = Category.objects.all()
         my_news = News.objects.all()[:3]
-        return self.render_to_response({'projects':projects,'categorys':categorys,'my_news':my_news,'form':form})
+        home_statistic = HomeStatistic.objects.first()
+        return self.render_to_response({'projects':projects,'categorys':categorys,'my_news':my_news,'form':form,'home_statistic':home_statistic})
 
     def post(self, request,category_id):
         user = CustomUser.objects.get(id = request.user.id)

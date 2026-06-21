@@ -5,29 +5,92 @@
 {% block title %}{% trans "Жүйеге кіру" %}{% endblock %}
 
 {% block content %}
+<style>
+	.auth-card {
+		font-size: 1.0625rem;
+		font-weight: 500;
+	}
+
+	.auth-card h1 {
+		font-weight: 800;
+	}
+
+	.auth-card .label-text,
+	.auth-card input {
+		font-size: 1.0625rem !important;
+		font-weight: 500;
+	}
+
+	.auth-card .btn,
+	.auth-card .font-semibold {
+		font-weight: 700;
+	}
+
+	.password-field input {
+		padding-right: 3rem;
+	}
+</style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-md">
-		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
+		<div class="auth-card card border border-border/50 bg-card shadow-xl shadow-primary/5">
 			<div class="card-body">
 				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Жүйеге кіру" %}</h1>
-				{% if form.errors %}
-				<div class="alert alert-error mt-4 text-sm">
-					<span>{% trans "Пайдаланушы атыңыз бен құпия сөзіңіз сәйкес келмеді. Қайталап көріңіз." %}</span>
+				<p class="mt-2 text-sm text-muted-foreground">{% trans "Аккаунтыңызға кіру үшін деректеріңізді енгізіңіз." %}</p>
+
+				{% if form.non_field_errors %}
+				<div class="mt-5 rounded-xl border border-error/30 bg-error/10 p-4 text-error">
+					<p class="font-bold">{% trans "Кіру мүмкін болмады" %}</p>
+					<p class="mt-1 text-sm leading-relaxed">
+						{% trans "Пайдаланушы аты немесе құпиясөз қате. Деректерді тексеріп, қайта кіріп көріңіз." %}
+					</p>
 				</div>
-				{% else %}
-				<p class="mt-2 text-sm text-muted-foreground">{% trans "Жүйеге кіру үшін келесі форманы толтырыңыз:" %}</p>
+				{% elif form.errors %}
+				<div class="mt-5 rounded-xl border border-error/30 bg-error/10 p-4 text-error">
+					<p class="font-bold">{% trans "Форманы тексеріңіз" %}</p>
+					<p class="mt-1 text-sm leading-relaxed">
+						{% trans "Кіру үшін барлық міндетті өрістерді толтырыңыз." %}
+					</p>
+				</div>
 				{% endif %}
 
-				<form action="{% url 'account:login' %}" method="POST" class="mt-1 space-y-4">
+				<form action="{% url 'account:login' %}" method="POST" class="mt-5 space-y-4" novalidate>
 					{% csrf_token %}
 					<input type="hidden" name="next" value="{{ next }}">
 					<label class="form-control">
-						<span class="label-text mb-2">{% trans "Пайдаланушының аты" %}</span>
-						{{ form.username|add_class:"input input-bordered w-full" }}
+						<span class="label-text mb-2">{% trans "Пайдаланушы аты" %}</span>
+						{% if form.errors %}
+							{{ form.username|add_class:"input input-bordered input-error w-full" }}
+						{% else %}
+							{{ form.username|add_class:"input input-bordered w-full" }}
+						{% endif %}
+						{% if form.username.errors %}
+						<span class="label-text-alt mt-2 text-error">{{ form.username.errors|striptags }}</span>
+						{% endif %}
 					</label>
 					<label class="form-control">
 						<span class="label-text mb-2">{% trans "Құпиясөз" %}</span>
-						{{ form.password|add_class:"input input-bordered w-full" }}
+						<div class="password-field relative">
+							{% if form.errors %}
+								{{ form.password|add_class:"input input-bordered input-error w-full" }}
+							{% else %}
+								{{ form.password|add_class:"input input-bordered w-full" }}
+							{% endif %}
+							<button type="button" class="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition hover:bg-secondary hover:text-foreground" aria-label="{% trans 'Құпиясөзді көрсету' %}" data-password-toggle data-show-label="{% trans 'Құпиясөзді көрсету' %}" data-hide-label="{% trans 'Құпиясөзді жасыру' %}">
+								<svg data-eye-open xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+									<circle cx="12" cy="12" r="3"></circle>
+								</svg>
+								<svg data-eye-closed class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="m2 2 20 20"></path>
+									<path d="M6.7 6.7C3.8 8.7 2 12 2 12s3.5 7 10 7c1.6 0 3-.4 4.2-1"></path>
+									<path d="M19.6 15.6C21.1 13.8 22 12 22 12s-3.5-7-10-7c-.9 0-1.8.1-2.6.4"></path>
+									<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path>
+								</svg>
+							</button>
+						</div>
+						{% if form.password.errors %}
+						<span class="label-text-alt mt-2 text-error">{{ form.password.errors|striptags }}</span>
+						{% endif %}
 					</label>
 					<button type="submit" class="btn btn-primary w-full">{% trans "Кіру" %}</button>
 				</form>
@@ -40,4 +103,24 @@
 		</div>
 	</div>
 </section>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('[data-password-toggle]').forEach(function (button) {
+			var wrapper = button.closest('.password-field');
+			var input = wrapper ? wrapper.querySelector('input[type="password"], input[type="text"]') : null;
+			var eyeOpen = button.querySelector('[data-eye-open]');
+			var eyeClosed = button.querySelector('[data-eye-closed]');
+
+			if (!input) return;
+
+			button.addEventListener('click', function () {
+				var isHidden = input.type === 'password';
+				input.type = isHidden ? 'text' : 'password';
+				eyeOpen.classList.toggle('hidden', isHidden);
+				eyeClosed.classList.toggle('hidden', !isHidden);
+				button.setAttribute('aria-label', isHidden ? button.dataset.hideLabel : button.dataset.showLabel);
+			});
+		});
+	});
+</script>
 {% endblock %}
