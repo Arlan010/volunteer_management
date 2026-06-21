@@ -12,18 +12,25 @@
 					{% csrf_token %}
 					<div class="grid gap-4 md:grid-cols-2">
 						<label class="form-control">
-							<span class="label-text">{% trans "Есімі" %}</span>
+							<span class="label-text">{{ user_form.first_name.label }}</span>
 							{{ user_form.first_name|add_class:"input input-bordered w-full" }}
-						</label>
-						<label class="form-control">
-							<span class="label-text">{% trans "Тегі" %}</span>
-							{{ user_form.last_name|add_class:"input input-bordered w-full" }}
 						</label>
 						<label class="form-control">
 							<span class="label-text">{% trans "Email" %}</span>
 							{{ user_form.email|add_class:"input input-bordered w-full" }}
 						</label>
 						<label class="form-control">
+							<span class="label-text">{% trans "Телефон" %}</span>
+							{{ user_form.phone|add_class:"input input-bordered w-full" }}
+						</label>
+						<label class="form-control md:col-span-2">
+							<span class="label-text">{{ user_form.photo.label }}</span>
+							{{ user_form.photo|add_class:"file-input file-input-bordered w-full" }}
+							{% if request.user.photo %}
+							<span class="label-text-alt mt-2 text-muted-foreground">{% trans "Ағымдағы фото сақталады, егер жаңа файл таңдалмаса." %}</span>
+							{% endif %}
+						</label>
+						<label class="form-control md:col-span-2">
 							<span class="label-text">{% trans "Ұйымның атауы" %}</span>
 							{{ form.title|add_class:"input input-bordered w-full" }}
 						</label>

@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateResponseMixin,View
 from .forms import UserRegistrationForm
 from django.contrib.auth import views as auth_views
@@ -38,3 +39,13 @@ class UserRegistrationView(TemplateResponseMixin, View):
             new_user.save()
             return redirect('account:login')
         return self.render_to_response({'registration_form': registration_form})
+
+
+class NotificationListView(LoginRequiredMixin, TemplateResponseMixin, View):
+    template_name = 'account/notifications.html'
+    login_url = 'account:login'
+
+    def get(self, request):
+        notifications = request.user.notifications.all()
+        request.user.notifications.filter(is_read=False).update(is_read=True)
+        return self.render_to_response({'notifications': notifications})

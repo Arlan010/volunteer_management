@@ -4,5 +4,6 @@ app_name = 'volunteers'
 urlpatterns = [
     path('project/<int:pk>', views.ProjectDetailView.as_view(), name='project_detail_view'),
     path('profile/', views.ProfileView.as_view(), name='profile_view'),
+    path('profile/update/', views.UpdateProfileView.as_view(), name='update_profile_view'),
     
 ]

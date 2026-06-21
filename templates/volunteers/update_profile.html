@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block content %}
+<section class="px-4 pb-20 pt-32">
+	<div class="mx-auto max-w-3xl">
+		<div class="card border border-border/50 bg-card shadow-xl shadow-primary/5">
+			<div class="card-body">
+				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Профильді өңдеу" %}</h1>
+				<form action="" method="POST" enctype="multipart/form-data" class="mt-6 space-y-5">
+					{% csrf_token %}
+					<div class="grid gap-4 md:grid-cols-2">
+						<label class="form-control md:col-span-2">
+							<span class="label-text">{{ form.first_name.label }}</span>
+							{{ form.first_name|add_class:"input input-bordered w-full" }}
+							{% if form.first_name.errors %}<span class="label-text-alt mt-2 text-error">{{ form.first_name.errors|striptags }}</span>{% endif %}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{{ form.email.label }}</span>
+							{{ form.email|add_class:"input input-bordered w-full" }}
+							{% if form.email.errors %}<span class="label-text-alt mt-2 text-error">{{ form.email.errors|striptags }}</span>{% endif %}
+						</label>
+						<label class="form-control">
+							<span class="label-text">{{ form.phone.label }}</span>
+							{{ form.phone|add_class:"input input-bordered w-full" }}
+							{% if form.phone.errors %}<span class="label-text-alt mt-2 text-error">{{ form.phone.errors|striptags }}</span>{% endif %}
+						</label>
+						<label class="form-control md:col-span-2">
+							<span class="label-text">{{ form.photo.label }}</span>
+							{{ form.photo|add_class:"file-input file-input-bordered w-full" }}
+							{% if request.user.photo %}
+							<span class="label-text-alt mt-2 text-muted-foreground">{% trans "Ағымдағы фото сақталады, егер жаңа файл таңдалмаса." %}</span>
+							{% endif %}
+							{% if form.photo.errors %}<span class="label-text-alt mt-2 text-error">{{ form.photo.errors|striptags }}</span>{% endif %}
+						</label>
+					</div>
+					<div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+						<a href="{% url 'volunteers:profile_view' %}" class="btn btn-outline">{% trans "Болдырмау" %}</a>
+						<button type="submit" class="btn btn-primary">{% trans "Сақтау" %}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

@@ -15,11 +15,11 @@
 			<div>
 				<h4 class="mb-4 text-sm font-semibold text-foreground">Жылдам сілтемелер</h4>
 				<ul class="space-y-3 text-sm">
-					<li><a href="#projects" class="text-muted-foreground hover:text-foreground transition-colors">Жобаларды
+					<li><a href="{% url 'main:main' %}#projects" class="text-muted-foreground hover:text-foreground transition-colors">Жобаларды
 							қарау</a></li>
-					<li><a href="#about" class="text-muted-foreground hover:text-foreground transition-colors">Біз
+					<li><a href="{% url 'main:main' %}#about" class="text-muted-foreground hover:text-foreground transition-colors">Біз
 							туралы</a></li>
-					<li><a href="#impact" class="text-muted-foreground hover:text-foreground transition-colors">Біздің
+					<li><a href="{% url 'main:main' %}#impact" class="text-muted-foreground hover:text-foreground transition-colors">Біздің
 							ықпалымыз</a></li>
 				</ul>
 			</div>
@@ -27,8 +27,8 @@
 			<div>
 				<h4 class="mb-4 text-sm font-semibold text-foreground">Волонтерлерге</h4>
 				<ul class="space-y-3 text-sm">
-					<li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Бастау</a></li>
-					<li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Волонтерлерге
+					<li><a href="{% url 'account:UserRegistrationView' %}" class="text-muted-foreground hover:text-foreground transition-colors">Бастау</a></li>
+					<li><a href="{% url 'main:project_list' %}" class="text-muted-foreground hover:text-foreground transition-colors">Волонтерлерге
 							арналған сұрақтар</a></li>
 				</ul>
 			</div>
@@ -36,9 +36,9 @@
 			<div>
 				<h4 class="mb-4 text-sm font-semibold text-foreground">Ұйымдарға</h4>
 				<ul class="space-y-3 text-sm">
-					<li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Бізбен
+					<li><a href="{% if request.user.is_authenticated and request.user.is_organization %}{% url 'organization:profile_view' %}{% else %}{% url 'account:UserRegistrationView' %}{% endif %}" class="text-muted-foreground hover:text-foreground transition-colors">Бізбен
 							серіктес болу</a></li>
-					<li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Жоба
+					<li><a href="{% if request.user.is_authenticated and request.user.is_organization and request.user.organization %}{% url 'organization:project_create' pk=request.user.organization.id %}{% elif request.user.is_authenticated and request.user.is_organization %}{% url 'organization:organization_create_view' %}{% else %}{% url 'account:UserRegistrationView' %}{% endif %}" class="text-muted-foreground hover:text-foreground transition-colors">Жоба
 							жариялау</a></li>
 				</ul>
 			</div>

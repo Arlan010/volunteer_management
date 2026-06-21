@@ -17,7 +17,13 @@
 			{% for news in my_news %}
 			<article class="card overflow-hidden border border-border/50 bg-card shadow-lg shadow-primary/5 transition hover:-translate-y-1 hover:shadow-xl">
 				<figure class="h-56 bg-secondary">
+					{% if news.photo %}
 					<img src="{{ news.photo.url }}" alt="{{ news.title }}" class="h-full w-full object-cover">
+					{% else %}
+					<div class="flex h-full w-full items-center justify-center bg-secondary text-4xl font-bold text-secondary-foreground">
+						{{ news.title|first|upper }}
+					</div>
+					{% endif %}
 				</figure>
 				<div class="card-body">
 					<div class="badge badge-ghost">{{ news.created_date }}</div>

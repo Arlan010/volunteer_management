@@ -14,11 +14,27 @@
 		</div>
 
 		{% if projects %}
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+		<div class="mb-6 max-w-md">
+			<label class="input input-bordered flex h-12 items-center gap-2 rounded-xl bg-background">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<circle cx="11" cy="11" r="8"></circle>
+					<path d="m21 21-4.3-4.3"></path>
+				</svg>
+				<input type="search" class="min-w-0 grow bg-transparent outline-none" placeholder="{% trans 'Жобаны іздеу' %}" data-project-search>
+			</label>
+		</div>
+
+		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-project-list>
 			{% for project in projects %}
-			<article class="card overflow-hidden border border-border/50 bg-card shadow-lg shadow-primary/5 transition hover:-translate-y-1 hover:shadow-xl">
+			<article class="card overflow-hidden border border-border/50 bg-card shadow-lg shadow-primary/5 transition hover:-translate-y-1 hover:shadow-xl" data-project-card data-project-search-text="{{ project.title }} {{ project.category }} {{ project.location }} {{ project.comment|default:'' }}">
 				<figure class="h-56 bg-secondary">
+					{% if project.photo %}
 					<img src="{{ project.photo.url }}" alt="{{ project.title }}" class="h-full w-full object-cover">
+					{% else %}
+					<div class="flex h-full w-full items-center justify-center bg-secondary text-4xl font-bold text-secondary-foreground">
+						{{ project.title|first|upper }}
+					</div>
+					{% endif %}
 				</figure>
 				<div class="card-body">
 					<div class="badge badge-secondary">{{ project.category }}</div>
@@ -40,6 +56,9 @@
 				</div>
 			</article>
 			{% endfor %}
+			<div class="alert hidden border border-border bg-card text-muted-foreground sm:col-span-2 lg:col-span-3" data-project-empty>
+				<span>{% trans "Мұндай жоба табылмады." %}</span>
+			</div>
 		</div>
 		{% else %}
 		<div class="alert border border-border bg-card text-muted-foreground">
@@ -48,4 +67,34 @@
 		{% endif %}
 	</div>
 </section>
+
+<script>
+	(function () {
+		const searchInput = document.querySelector('[data-project-search]');
+		const projectCards = Array.from(document.querySelectorAll('[data-project-card]'));
+		const emptyMessage = document.querySelector('[data-project-empty]');
+
+		if (!searchInput || !projectCards.length) {
+			return;
+		}
+
+		searchInput.addEventListener('input', () => {
+			const query = searchInput.value.trim().toLowerCase();
+			let visibleCount = 0;
+
+			projectCards.forEach((card) => {
+				const searchableText = card.dataset.projectSearchText || card.textContent;
+				const isMatch = searchableText.toLowerCase().includes(query);
+				card.classList.toggle('hidden', !isMatch);
+				if (isMatch) {
+					visibleCount += 1;
+				}
+			});
+
+			if (emptyMessage) {
+				emptyMessage.classList.toggle('hidden', visibleCount > 0);
+			}
+		});
+	})();
+</script>
 {% endblock %}

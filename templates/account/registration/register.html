@@ -36,6 +36,10 @@
 		padding-bottom: 0 !important;
 		line-height: 3rem !important;
 	}
+
+	.password-field input {
+		padding-right: 3rem;
+	}
 </style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-xl">
@@ -44,19 +48,21 @@
 				<h1 class="text-3xl font-bold tracking-tight text-foreground">{% trans "Жүйеге тіркелу" %}</h1>
 				<p class="mt-2 text-sm text-muted-foreground">{% trans "Жүйеге тіркелу үшін келесі форманы толтырыңыз:" %}</p>
 
-				<form method="post" enctype="multipart/form-data" class="mt-1 space-y-4">
+				<form method="post" enctype="multipart/form-data" class="mt-1 space-y-4" data-registration-form>
 					{% csrf_token %}
 					{% for field in registration_form %}
 					<div class="form-control">
 						<span class="label-text mb-2">
 							{% if field.name == "username" %}
-								{% trans "Пайдаланушының аты" %}
+								{% trans "Пайдаланушы аты" %}
 							{% elif field.name == "first_name" %}
-								{% trans "Аты" %}
+								{% trans "Аты-жөні" %}
 							{% elif field.name == "email" %}
 								{% trans "Электрондық пошта мекенжайы" %}
 							{% elif field.name == "role" %}
 								{% trans "Кім ретінде тіркелесіз?" %}
+							{% elif field.name == "phone" %}
+								{% trans "Телефон" %}
 							{% elif field.name == "photo" %}
 								{% trans "Профиль суреті" %}
 							{% else %}
@@ -75,11 +81,31 @@
 									{% trans "Файл таңдалмады" %}
 								</span>
 							</label>
+						{% elif field.name == "password" or field.name == "password2" %}
+							<div class="password-field relative">
+								{{ field|add_class:"input input-bordered h-12 min-h-12 w-full py-0 leading-normal" }}
+								<button type="button" class="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition hover:bg-secondary hover:text-foreground" aria-label="{% trans 'Құпиясөзді көрсету' %}" data-password-toggle data-show-label="{% trans 'Құпиясөзді көрсету' %}" data-hide-label="{% trans 'Құпиясөзді жасыру' %}">
+									<svg data-eye-open xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+										<circle cx="12" cy="12" r="3"></circle>
+									</svg>
+									<svg data-eye-closed class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="m2 2 20 20"></path>
+										<path d="M6.7 6.7C3.8 8.7 2 12 2 12s3.5 7 10 7c1.6 0 3-.4 4.2-1"></path>
+										<path d="M19.6 15.6C21.1 13.8 22 12 22 12s-3.5-7-10-7c-.9 0-1.8.1-2.6.4"></path>
+										<path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path>
+									</svg>
+								</button>
+							</div>
 						{% else %}
 							{{ field|add_class:"input input-bordered h-12 min-h-12 w-full py-0 leading-normal" }}
 						{% endif %}
 						{% if field.errors %}
-						<span class="label-text-alt text-error">{{ field.errors|striptags }}</span>
+						<ul class="mt-2 space-y-1 text-sm text-error">
+							{% for error in field.errors %}
+							<li>{{ error }}</li>
+							{% endfor %}
+						</ul>
 						{% endif %}
 					</div>
 					{% endfor %}
@@ -90,13 +116,129 @@
 	</div>
 </section>
 <script>
-	const photoInput = document.querySelector('input[type="file"][name="photo"]');
-	const fileName = document.querySelector('[data-file-name]');
+	document.addEventListener('DOMContentLoaded', function () {
+		var form = document.querySelector('[data-registration-form]');
+		var photoInput = document.getElementById('id_photo');
+		var fileName = document.querySelector('[data-file-name]');
+		var messages = {
+			username: {
+				valueMissing: 'Пайдаланушы атын енгізіңіз.'
+			},
+			first_name: {
+				valueMissing: 'Аты-жөніңізді енгізіңіз.'
+			},
+			email: {
+				valueMissing: 'Электрондық пошта мекенжайын енгізіңіз.',
+				typeMismatch: 'Электрондық пошта форматын дұрыс енгізіңіз. Мысалы: name@example.com'
+			},
+			role: {
+				valueMissing: 'Рөлді таңдаңыз.'
+			},
+			phone: {
+				valueMissing: 'Телефон нөмірін енгізіңіз.',
+				patternMismatch: 'Телефон нөмірін дұрыс форматта енгізіңіз. Мысалы: +7 777 123 45 67'
+			},
+			password: {
+				valueMissing: 'Құпиясөзді енгізіңіз.'
+			},
+			password2: {
+				valueMissing: 'Құпиясөзді қайталаңыз.'
+			}
+		};
 
-	if (photoInput && fileName) {
-		photoInput.addEventListener('change', () => {
-			fileName.textContent = photoInput.files.length ? photoInput.files[0].name : '{% trans "Файл таңдалмады" %}';
+		function getValidationMessage(field) {
+			var fieldMessages = messages[field.name] || {};
+
+			if (field.validity.valueMissing) {
+				return fieldMessages.valueMissing || 'Бұл өрісті толтырыңыз.';
+			}
+			if (field.name === 'password') {
+				if (/[^A-Za-z0-9!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?`~]/.test(field.value)) {
+					return 'Құпиясөз тек ағылшын әріптерінен, сандардан және арнайы таңбалардан тұруы керек.';
+				}
+				if (field.value.length < 8) {
+					return 'Құпиясөз кемінде 8 таңбадан тұруы керек.';
+				}
+				if (!/[A-Z]/.test(field.value)) {
+					return 'Құпиясөзде кемінде бір үлкен ағылшын әрпі болуы керек.';
+				}
+				if (!/[a-z]/.test(field.value)) {
+					return 'Құпиясөзде кемінде бір кіші ағылшын әрпі болуы керек.';
+				}
+				if (!/\d/.test(field.value)) {
+					return 'Құпиясөзде кемінде бір сан болуы керек.';
+				}
+				if (!/[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?`~]/.test(field.value)) {
+					return 'Құпиясөзде кемінде бір арнайы таңба болуы керек.';
+				}
+			}
+			if (field.validity.typeMismatch) {
+				return fieldMessages.typeMismatch || 'Деректер форматын дұрыс енгізіңіз.';
+			}
+			if (field.validity.patternMismatch) {
+				return fieldMessages.patternMismatch || 'Деректер форматын дұрыс енгізіңіз.';
+			}
+			if (field.name === 'password2') {
+				var password = document.getElementById('id_password');
+				if (password && field.value && password.value !== field.value) {
+					return 'Құпиясөздер сәйкес келмейді.';
+				}
+			}
+
+			return '';
+		}
+
+		function updateFieldValidity(field) {
+			field.setCustomValidity('');
+			field.setCustomValidity(getValidationMessage(field));
+		}
+
+		document.querySelectorAll('[data-password-toggle]').forEach(function (button) {
+			var wrapper = button.closest('.password-field');
+			var input = wrapper ? wrapper.querySelector('input[type="password"], input[type="text"]') : null;
+			var eyeOpen = button.querySelector('[data-eye-open]');
+			var eyeClosed = button.querySelector('[data-eye-closed]');
+
+			if (!input) return;
+
+			button.addEventListener('click', function () {
+				var isHidden = input.type === 'password';
+				input.type = isHidden ? 'text' : 'password';
+				eyeOpen.classList.toggle('hidden', isHidden);
+				eyeClosed.classList.toggle('hidden', !isHidden);
+				button.setAttribute('aria-label', isHidden ? button.dataset.hideLabel : button.dataset.showLabel);
+			});
 		});
-	}
+
+		if (form) {
+			Array.prototype.forEach.call(form.querySelectorAll('input, select'), function (field) {
+				if (field.type === 'file') return;
+
+				field.addEventListener('invalid', function () {
+					updateFieldValidity(field);
+				});
+				field.addEventListener('input', function () {
+					updateFieldValidity(field);
+				});
+				field.addEventListener('change', function () {
+					updateFieldValidity(field);
+				});
+			});
+
+			form.addEventListener('submit', function () {
+				Array.prototype.forEach.call(form.querySelectorAll('input, select'), function (field) {
+					if (field.type !== 'file') {
+						updateFieldValidity(field);
+					}
+				});
+			});
+		}
+
+		if (photoInput && fileName) {
+			photoInput.addEventListener('change', function () {
+				fileName.textContent = photoInput.files.length ? photoInput.files[0].name : 'Файл таңдалмады';
+			});
+		}
+	});
 </script>
 {% endblock %}

@@ -4,15 +4,36 @@
 {% load volunteer_tags %}
 
 {% block content %}
+<style>
+	.profile-photo,
+	.profile-photo-fallback {
+		width: 9rem;
+		height: 9rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 9999px;
+	}
+
+	.profile-photo {
+		display: block;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.profile-photo-fallback {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
 <section class="px-4 pb-20 pt-32">
 	<div class="mx-auto max-w-5xl">
 		<div class="grid gap-6 md:grid-cols-[280px_1fr]">
 			<aside class="card border border-border/50 bg-card shadow-lg shadow-primary/5">
 				<div class="card-body items-center text-center">
 					{% if request.user.photo %}
-					<img src="{{ request.user.photo.url }}" alt="" class="h-36 w-36 rounded-full object-cover ring ring-primary/15">
+					<img src="{{ request.user.photo.url }}" alt="{{ request.user.first_name }}" class="profile-photo ring ring-primary/15">
 					{% else %}
-					<div class="flex h-36 w-36 items-center justify-center rounded-full bg-secondary text-4xl font-bold text-primary ring ring-primary/15">
+					<div class="profile-photo-fallback bg-secondary text-4xl font-bold text-primary ring ring-primary/15">
 						{{ request.user.first_name|default:request.user.username|first|upper }}
 					</div>
 					{% endif %}
@@ -26,7 +47,7 @@
 					<h2 class="card-title">{% trans "Профиль туралы ақпарат" %}</h2>
 					<div class="divide-y divide-border/70">
 						<div class="grid gap-2 py-4 sm:grid-cols-3">
-							<p class="font-semibold text-foreground">{% trans "Аты жөні" %}</p>
+							<p class="font-semibold text-foreground">{% trans "Еріктінің аты-жөні" %}</p>
 							<p class="text-muted-foreground sm:col-span-2">{{ request.user.first_name }} {{ request.user.last_name }}</p>
 						</div>
 						<div class="grid gap-2 py-4 sm:grid-cols-3">
@@ -47,6 +68,11 @@
 							<p class="font-semibold text-foreground">{% trans "Жетістіктер" %}</p>
 							<p class="text-muted-foreground sm:col-span-2">{% get_response_project_count request.user.id %}</p>
 						</div>
+					</div>
+					<div class="card-actions justify-end">
+						<a class="btn btn-primary btn-sm" href="{% url 'volunteers:update_profile_view' %}">
+							{% trans "Өңдеу" %}
+						</a>
 					</div>
 				</div>
 			</div>
